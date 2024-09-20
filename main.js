@@ -1,0 +1,798 @@
+// Mapping of country codes to country names
+const countryNames = {
+    "fi": "Finland",
+    "se": "Sweden",
+    "nl": "Netherlands",
+    "dk": "Denmark",
+    "de": "Germany",
+    "ie": "Ireland",
+    "be": "Belgium",
+    "pl": "Poland",
+    "lt": "Lithuania",
+    "ee": "Estonia",
+    "pt": "Portugal",
+    "ro": "Romania",
+    "cz": "Czech Republic",
+    "at": "Austria",
+    "hr": "Croatia",
+    "fr": "France",
+    "es": "Spain",
+    "hu": "Hungary",
+    "sk": "Slovakia",
+    "lv": "Latvia",
+    "si": "Slovenia",
+    "bg": "Bulgaria",
+    "gr": "Greece",
+    "it": "Italy",
+    "lu": "Luxembourg",
+    "mt": "Malta",
+    "cy": "Cyprus"
+};
+
+const countryPopulations = {
+    "fi": 5527573,
+    "se": 10327589,
+    "nl": 17441139,
+    "dk": 5831404,
+    "de": 83166711,
+    "ie": 4994724,
+    "be": 11589623,
+    "pl": 38386000,
+    "lt": 2794700,
+    "ee": 1328976,
+    "pt": 10295909,
+    "ro": 19237691,
+    "cz": 10701777,
+    "at": 8917205,
+    "hr": 4047200,
+    "fr": 67391582,
+    "es": 47351567,
+    "hu": 9769526,
+    "sk": 5456362,
+    "lv": 1901548,
+    "si": 2100126,
+    "bg": 6951482,
+    "gr": 10423054,
+    "it": 60244639,
+    "lu": 634814,
+    "mt": 514564,
+    "cy": 888005
+};
+
+// Function to fetch the flag URL from Wikipedia
+function fetchFlagUrl(countryName) {
+    const specialCases = {
+        "Netherlands": "Flag_of_the_Netherlands",
+        "Czech Republic": "Flag_of_the_Czech_Republic"
+    };
+
+    const title = specialCases[countryName] || `Flag_of_${countryName.replace(/ /g, '_')}`;
+    const url = `https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&prop=pageimages&piprop=thumbnail&pithumbsize=500&titles=${title}`;
+
+    return fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            const pages = data.query.pages;
+            const page = Object.values(pages)[0];
+            return page.thumbnail ? page.thumbnail.source : null;
+        })
+        .catch(error => {
+            console.error('Error fetching flag:', error);
+            return null;
+        });
+}
+
+function updateThresholdProgress(countries) {
+    const thresholdCount = countries.filter(country => country.percentage >= 100).length;
+    const parentDiv = document.querySelector('.threshold-progress');
+    parentDiv.innerHTML = ''; // Clear existing segments
+
+    for (let i = 0; i < 7; i++) {
+        const segment = document.createElement('div');
+        segment.className = 'threshold-progress-segment';
+        if (i < thresholdCount) {
+            segment.style.backgroundColor = '#76c7c0';
+        } else {
+            segment.style.backgroundColor = '#e0e0e0';
+        }
+        parentDiv.appendChild(segment);
+    }
+}
+// Function to display countries
+function displayCountries(countries, showMethods = false) {
+    const parentDiv = document.getElementById('myDiv');
+    parentDiv.innerHTML = ''; // Clear existing content
+
+    // Fetch all flag URLs
+    const flagPromises = countries.map(item => {
+        const countryName = countryNames[item.countryCode] || item.countryCode;
+        return fetchFlagUrl(countryName).then(flagUrl => ({
+            ...item,
+            flagUrl
+        }));
+    });
+
+    // Wait for all flag URLs to be fetched
+    Promise.all(flagPromises).then(countriesWithFlags => {
+        countriesWithFlags.forEach(item => {
+
+            // Calculate signatures per capita
+            const population = countryPopulations[item.countryCode];
+            const signaturesPerCapita = population ? (item.totalCount / population) * 100 : 0;
+
+            // Create a new div element for each item
+            const div = document.createElement('div');
+            div.className = "country-data";
+
+            // Create an img element for the flag if available
+            if (item.flagUrl) {
+                const flagImg = document.createElement('img');
+                flagImg.className = 'country-flag';
+                flagImg.src = item.flagUrl;
+                flagImg.alt = `${countryNames[item.countryCode]} Flag`;
+
+                switch (item.countryCode) {
+                    case 'fi':
+                        flagImg.addEventListener('click', () => {
+                            window.location.href = 'https://www.stopkillinggames.com/ecifirstoption';
+                        });
+                        break;
+                    case 'se':
+                        flagImg.addEventListener('click', () => {
+                            window.location.href = 'https://www.stopkillinggames.com/ecisecondoption';
+                        });
+                        break;
+                    case 'nl':
+                        flagImg.addEventListener('click', () => {
+                            window.location.href = 'https://www.stopkillinggames.com/ecifirstoption';
+                        });
+                        break;
+                    case 'dk':
+                        flagImg.addEventListener('click', () => {
+                            window.location.href = 'https://www.stopkillinggames.com/ecifirstoption';
+                        });
+                        break;
+                    case 'de':
+                        flagImg.addEventListener('click', () => {
+                            window.location.href = 'https://www.stopkillinggames.com/ecifirstoption';
+                        });
+                        break;
+                    case 'ie':
+                        flagImg.addEventListener('click', () => {
+                            window.location.href = 'https://www.stopkillinggames.com/ecifirstoption';
+                        });
+                        break;
+                    case 'be':
+                        flagImg.addEventListener('click', () => {
+                            window.location.href = 'https://www.stopkillinggames.com/ecisecondoption';
+                        });
+                        break;
+                    case 'pl':
+                        flagImg.addEventListener('click', () => {
+                            window.location.href = 'https://www.stopkillinggames.com/ecisecondoption';
+                        });
+                        break;
+                    case 'lt':
+                        flagImg.addEventListener('click', () => {
+                            window.location.href = 'https://www.stopkillinggames.com/ecisecondoption';
+                        });
+                        break;
+                    case 'ee':
+                        flagImg.addEventListener('click', () => {
+                            window.location.href = 'https://www.stopkillinggames.com/ecisecondoption';
+                        });
+                        break;
+                    case 'pt':
+                        flagImg.addEventListener('click', () => {
+                            window.location.href = 'https://www.stopkillinggames.com/ecisecondoption';
+                        });
+                        break;
+                    case 'ro':
+                        flagImg.addEventListener('click', () => {
+                            window.location.href = 'https://www.stopkillinggames.com/ecisecondoption';
+                        });
+                        break;
+                    case 'cz':
+                        flagImg.addEventListener('click', () => {
+                            window.location.href = 'https://www.stopkillinggames.com/ecisecondoption';
+                        });
+                        break;
+                    case 'at':
+                        flagImg.addEventListener('click', () => {
+                            window.location.href = 'https://www.stopkillinggames.com/ecisecondoption';
+                        });
+                        break;
+                    case 'hr':
+                        flagImg.addEventListener('click', () => {
+                            window.location.href = 'https://www.stopkillinggames.com/ecisecondoption';
+                        });
+                        break;
+                    case 'fr':
+                        flagImg.addEventListener('click', () => {
+                            window.location.href = 'https://www.stopkillinggames.com/ecifirstoption';
+                        });
+                        break;
+                    case 'es':
+                        flagImg.addEventListener('click', () => {
+                            window.location.href = 'https://www.stopkillinggames.com/ecisecondoption';
+                        });
+                        break;
+                    case 'hu':
+                        flagImg.addEventListener('click', () => {
+                            window.location.href = 'https://www.stopkillinggames.com/ecisecondoption';
+                        });
+                        break;
+                    case 'sk':
+                        flagImg.addEventListener('click', () => {
+                            window.location.href = 'https://www.stopkillinggames.com/ecifirstoption';
+                        });
+                        break;
+                    case 'lv':
+                        flagImg.addEventListener('click', () => {
+                            window.location.href = 'https://www.stopkillinggames.com/ecisecondoption';
+                        });
+                        break;
+                    case 'si':
+                        flagImg.addEventListener('click', () => {
+                            window.location.href = 'https://www.stopkillinggames.com/ecisecondoption';
+                        });
+                        break;
+                    case 'bg':
+                        flagImg.addEventListener('click', () => {
+                            window.location.href = 'https://www.stopkillinggames.com/ecisecondoption';
+                        });
+                        break;
+                    case 'gr':
+                        flagImg.addEventListener('click', () => {
+                            window.location.href = 'https://www.stopkillinggames.com/ecifirstoption';
+                        });
+                        break;
+                    case 'it':
+                        flagImg.addEventListener('click', () => {
+                            window.location.href = 'https://www.stopkillinggames.com/ecisecondoption';
+                        });
+                        break;
+                    case 'lu':
+                        flagImg.addEventListener('click', () => {
+                            window.location.href = 'https://www.stopkillinggames.com/ecifirstoption';
+                        });
+                        break;
+                    case 'mt':
+                        flagImg.addEventListener('click', () => {
+                            window.location.href = 'https://www.stopkillinggames.com/ecisecondoption';
+                        });
+                        break;
+                    case 'cy':
+                        flagImg.addEventListener('click', () => {
+                            window.location.href = 'https://www.stopkillinggames.com/ecisecondoption';
+                        });
+                        break;
+                    default: break;
+                }
+                div.appendChild(flagImg);
+            }
+
+            // Create a new p element for the country name
+            const countryNameElement = document.createElement('p');
+            countryNameElement.className = 'country-name';
+            countryNameElement.textContent = `${countryNames[item.countryCode] || item.countryCode}`;
+
+            // Create a new p element for the total count
+            const totalCountElement = document.createElement('p');
+            totalCountElement.className = 'total-count';
+            totalCountElement.textContent = `Total Count: ${item.totalCount.toLocaleString()}`;
+
+            // Create a new p element for the threshold
+            const tresholdElement = document.createElement('p');
+            tresholdElement.className = 'treshold';
+            tresholdElement.textContent = `Threshold: ${item.treshold.toLocaleString()}`;
+
+            // Create the signatures per capita element
+            const signaturesPerCapitaElement = document.createElement('p');
+            signaturesPerCapitaElement.className = 'signatures-per-capita';
+            signaturesPerCapitaElement.textContent = `Signatures/Capita: ${signaturesPerCapita.toFixed(2)}%`;
+
+            // Create a progress bar for the country
+            const countryProgressBar = document.createElement('div');
+            countryProgressBar.className = 'progress-bar';
+
+            const progressBarFill = document.createElement('div');
+            progressBarFill.className = 'progress';
+            const progressBarSecondFill = document.createElement('div');
+            progressBarSecondFill.className = 'progress-second';
+            const progressBarThirdFill = document.createElement('div');
+            progressBarThirdFill.className = 'progress-third';
+
+            // Calculate the width for each layer
+            const percentage = item.percentage;
+            const firstLayerWidth = Math.min(percentage, 100);
+            const secondLayerWidth = Math.min(Math.max(percentage - 100, 0), 100);
+            const thirdLayerWidth = Math.min(Math.max(percentage - 200, 0), 100);
+
+            progressBarFill.style.width = `${firstLayerWidth}%`;
+            progressBarSecondFill.style.width = `${secondLayerWidth}%`;
+            progressBarThirdFill.style.width = `${thirdLayerWidth}%`;
+
+            // Conditionally add the border class
+            if (firstLayerWidth > 1) {
+                progressBarFill.classList.add('progress-divider');
+            }
+            if (secondLayerWidth > 1) {
+                progressBarSecondFill.classList.add('progress-divider');
+            }
+            if (thirdLayerWidth > 1) {
+                progressBarThirdFill.classList.add('progress-divider');
+            }
+
+
+            // Create a span element for the percentage text
+            const percentageText = document.createElement('span');
+            percentageText.className = 'percentage-text';
+            percentageText.textContent = `${percentage.toLocaleString()}%`;
+
+
+
+            // Create a new p element for the disclaimer
+            const disclaimerElement = document.createElement('p');
+            disclaimerElement.className = 'fullDisclaimer';
+            disclaimerElement.textContent = `Your signature still matters!`;
+
+
+            // Append the filled progress bars to the progress bar container
+            countryProgressBar.appendChild(progressBarFill);
+            countryProgressBar.appendChild(progressBarSecondFill);
+            countryProgressBar.appendChild(progressBarThirdFill);
+
+            // Append the percentage text to the progress bar container
+            countryProgressBar.appendChild(percentageText);
+
+
+
+
+            // Add the correct frame based on the progress
+            if (percentage >= 300) {
+                div.classList.add('gold-frame');
+            }
+            else if (percentage >= 200) {
+                div.classList.add('silver-frame');
+            }
+            else if (percentage >= 100) {
+                div.classList.add('bronze-frame');
+            }
+
+            // Append the country name, total count, threshold, signatures per capita, and progress bar to the main div
+            div.appendChild(countryNameElement);
+            div.appendChild(totalCountElement);
+            div.appendChild(tresholdElement);
+            div.appendChild(signaturesPerCapitaElement);
+            if (showMethods) {
+                const formCountElement = document.createElement('p');
+                formCountElement.className = 'form-count';
+                formCountElement.textContent = `Form Count: ${item.formCount.toLocaleString()}`;
+
+                const eidCountElement = document.createElement('p');
+                eidCountElement.className = 'eid-count';
+                eidCountElement.textContent = `EID Count: ${item.eidCount.toLocaleString()}`;
+
+                div.appendChild(formCountElement);
+                div.appendChild(eidCountElement);
+            }
+            div.appendChild(countryProgressBar);
+            if ((percentage >= 100) && !showMethods) {
+                div.appendChild(disclaimerElement);
+            }
+
+
+
+            // Append the new div element to the parent div
+            parentDiv.appendChild(div);
+        });
+        updateThresholdProgress(countriesWithFlags);
+    });
+}
+
+// Function to display countries with signature methods
+
+/*
+function displayCountriesWithMethods(countries) {
+    const parentDiv = document.getElementById('myDiv');
+    parentDiv.innerHTML = ''; // Clear existing content
+
+    // Fetch all flag URLs
+    const flagPromises = countries.map(item => {
+        const countryName = countryNames[item.countryCode] || item.countryCode;
+        return fetchFlagUrl(countryName).then(flagUrl => ({
+            ...item,
+            flagUrl
+        }));
+    });
+
+    // Wait for all flag URLs to be fetched
+    Promise.all(flagPromises).then(countriesWithFlags => {
+        countriesWithFlags.forEach(item => {
+            // Create a new div element for each item
+            const div = document.createElement('div');
+            div.className = "country-data";
+
+            // Calculate signatures per capita
+            const population = countryPopulations[item.countryCode];
+            const signaturesPerCapita = population ? (item.totalCount / population) * 100 : 0;
+
+
+            // Create an img element for the flag if available
+            if (item.flagUrl) {
+                const flagImg = document.createElement('img');
+                flagImg.className = 'country-flag';
+                flagImg.src = item.flagUrl;
+                flagImg.alt = `${countryNames[item.countryCode]} Flag`;
+
+                switch (item.countryCode) {
+                    case 'fi':
+                        flagImg.addEventListener('click', () => {
+                            window.location.href = 'https://www.stopkillinggames.com/ecifirstoption';
+                        });
+                        break;
+                    case 'se':
+                        flagImg.addEventListener('click', () => {
+                            window.location.href = 'https://www.stopkillinggames.com/ecisecondoption';
+                        });
+                        break;
+                    case 'nl':
+                        flagImg.addEventListener('click', () => {
+                            window.location.href = 'https://www.stopkillinggames.com/ecifirstoption';
+                        });
+                        break;
+                    case 'dk':
+                        flagImg.addEventListener('click', () => {
+                            window.location.href = 'https://www.stopkillinggames.com/ecifirstoption';
+                        });
+                        break;
+                    case 'de':
+                        flagImg.addEventListener('click', () => {
+                            window.location.href = 'https://www.stopkillinggames.com/ecifirstoption';
+                        });
+                        break;
+                    case 'ie':
+                        flagImg.addEventListener('click', () => {
+                            window.location.href = 'https://www.stopkillinggames.com/ecifirstoption';
+                        });
+                        break;
+                    case 'be':
+                        flagImg.addEventListener('click', () => {
+                            window.location.href = 'https://www.stopkillinggames.com/ecisecondoption';
+                        });
+                        break;
+                    case 'pl':
+                        flagImg.addEventListener('click', () => {
+                            window.location.href = 'https://www.stopkillinggames.com/ecisecondoption';
+                        });
+                        break;
+                    case 'lt':
+                        flagImg.addEventListener('click', () => {
+                            window.location.href = 'https://www.stopkillinggames.com/ecisecondoption';
+                        });
+                        break;
+                    case 'ee':
+                        flagImg.addEventListener('click', () => {
+                            window.location.href = 'https://www.stopkillinggames.com/ecisecondoption';
+                        });
+                        break;
+                    case 'pt':
+                        flagImg.addEventListener('click', () => {
+                            window.location.href = 'https://www.stopkillinggames.com/ecisecondoption';
+                        });
+                        break;
+                    case 'ro':
+                        flagImg.addEventListener('click', () => {
+                            window.location.href = 'https://www.stopkillinggames.com/ecisecondoption';
+                        });
+                        break;
+                    case 'cz':
+                        flagImg.addEventListener('click', () => {
+                            window.location.href = 'https://www.stopkillinggames.com/ecisecondoption';
+                        });
+                        break;
+                    case 'at':
+                        flagImg.addEventListener('click', () => {
+                            window.location.href = 'https://www.stopkillinggames.com/ecisecondoption';
+                        });
+                        break;
+                    case 'hr':
+                        flagImg.addEventListener('click', () => {
+                            window.location.href = 'https://www.stopkillinggames.com/ecisecondoption';
+                        });
+                        break;
+                    case 'fr':
+                        flagImg.addEventListener('click', () => {
+                            window.location.href = 'https://www.stopkillinggames.com/ecifirstoption';
+                        });
+                        break;
+                    case 'es':
+                        flagImg.addEventListener('click', () => {
+                            window.location.href = 'https://www.stopkillinggames.com/ecisecondoption';
+                        });
+                        break;
+                    case 'hu':
+                        flagImg.addEventListener('click', () => {
+                            window.location.href = 'https://www.stopkillinggames.com/ecisecondoption';
+                        });
+                        break;
+                    case 'sk':
+                        flagImg.addEventListener('click', () => {
+                            window.location.href = 'https://www.stopkillinggames.com/ecifirstoption';
+                        });
+                        break;
+                    case 'lv':
+                        flagImg.addEventListener('click', () => {
+                            window.location.href = 'https://www.stopkillinggames.com/ecisecondoption';
+                        });
+                        break;
+                    case 'si':
+                        flagImg.addEventListener('click', () => {
+                            window.location.href = 'https://www.stopkillinggames.com/ecisecondoption';
+                        });
+                        break;
+                    case 'bg':
+                        flagImg.addEventListener('click', () => {
+                            window.location.href = 'https://www.stopkillinggames.com/ecisecondoption';
+                        });
+                        break;
+                    case 'gr':
+                        flagImg.addEventListener('click', () => {
+                            window.location.href = 'https://www.stopkillinggames.com/ecifirstoption';
+                        });
+                        break;
+                    case 'it':
+                        flagImg.addEventListener('click', () => {
+                            window.location.href = 'https://www.stopkillinggames.com/ecisecondoption';
+                        });
+                        break;
+                    case 'lu':
+                        flagImg.addEventListener('click', () => {
+                            window.location.href = 'https://www.stopkillinggames.com/ecifirstoption';
+                        });
+                        break;
+                    case 'mt':
+                        flagImg.addEventListener('click', () => {
+                            window.location.href = 'https://www.stopkillinggames.com/ecisecondoption';
+                        });
+                        break;
+                    case 'cy':
+                        flagImg.addEventListener('click', () => {
+                            window.location.href = 'https://www.stopkillinggames.com/ecisecondoption';
+                        });
+                        break;
+                    default: break;
+                }
+                div.appendChild(flagImg);
+            }
+
+            // Create a new p element for the country name
+            const countryNameElement = document.createElement('p');
+            countryNameElement.className = 'country-name';
+            countryNameElement.textContent = `${countryNames[item.countryCode] || item.countryCode}`;
+
+            // Create a new p element for the total count
+            const totalCountElement = document.createElement('p');
+            totalCountElement.className = 'total-count';
+            totalCountElement.textContent = `Total Count: ${item.totalCount.toLocaleString()}`;
+
+            // Create a new p element for the treshold
+            const tresholdElement = document.createElement('p');
+            tresholdElement.className = 'treshold';
+            tresholdElement.textContent = `Threshold: ${item.treshold.toLocaleString()}`;
+
+            // Create a new p element for the form count
+            const formCountElement = document.createElement('p');
+            formCountElement.className = 'form-count';
+            formCountElement.textContent = `Form Count: ${item.formCount.toLocaleString()}`;
+
+            // Create a new p element for the eid count
+            const eidCountElement = document.createElement('p');
+            eidCountElement.className = 'eid-count';
+            eidCountElement.textContent = `EID Count: ${item.eidCount.toLocaleString()}`;
+
+            // Create a progress bar for the country
+            const countryProgressBar = document.createElement('div');
+            countryProgressBar.className = 'progress-bar';
+            const progressBarFill = document.createElement('div');
+            progressBarFill.className = 'progress';
+            progressBarFill.style.width = `${item.percentage}%`;
+
+
+            const signaturesPerCapitaElement = document.createElement('p');
+            signaturesPerCapitaElement.className = 'signatures-per-capita';
+            signaturesPerCapitaElement.textContent = `Signatures/Capita: ${signaturesPerCapita.toFixed(2)}%`;
+
+
+            // Create a span element for the percentage text
+            const percentageText = document.createElement('span');
+            percentageText.className = 'percentage-text';
+            percentageText.textContent = `${item.percentage.toLocaleString()}%`;
+
+            // Append the percentage text to the progress bar container
+            countryProgressBar.appendChild(percentageText);
+
+            // Append the filled progress bar to the progress bar container
+            countryProgressBar.appendChild(progressBarFill);
+
+            // Change color to a darker shade of green if percentage is 100%
+            if (item.percentage >= 100) {
+                progressBarFill.style.backgroundColor = '#388E3C';
+                div.classList.add('golden-frame');
+            }
+
+            // Append the country name, total count, percentage, treshold, form count, eid count, and progress bar to the main div
+            div.appendChild(countryNameElement);
+            div.appendChild(totalCountElement);
+            div.appendChild(tresholdElement);
+            div.appendChild(formCountElement);
+            div.appendChild(eidCountElement);
+            div.appendChild(signaturesPerCapitaElement);
+            div.appendChild(countryProgressBar);
+
+            // Append the new div element to the parent div
+            parentDiv.appendChild(div);
+        });
+    });
+} */
+
+// Function to sort countries and update the display
+function sortCountries(order = 'desc', sortBy = 'percentage') {
+    fetch('https://eci.ec.europa.eu/045/public/api/report/map')
+        .then(response => response.json())
+        .then(data => {
+            const sortedCountries = [...data.signatureCountryCount].sort((a, b) => {
+                if (sortBy === 'percentage') {
+                    return order === 'asc' ? a.percentage - b.percentage : b.percentage - a.percentage;
+                } else if (sortBy === 'totalCount') {
+                    return order === 'asc' ? a.totalCount - b.totalCount : b.totalCount - a.totalCount;
+                } else if (sortBy === 'alphabetical') {
+                    const nameA = countryNames[a.countryCode] || a.countryCode;
+                    const nameB = countryNames[b.countryCode] || b.countryCode;
+                    return order === 'asc' ? nameA.localeCompare(nameB) : nameB.localeCompare(nameA);
+                } else if (sortBy === 'perCapita') {
+                    const perCapitaA = a.totalCount / countryPopulations[a.countryCode];
+                    const perCapitaB = b.totalCount / countryPopulations[b.countryCode];
+                    return order === 'asc' ? perCapitaA - perCapitaB : perCapitaB - perCapitaA;
+                }
+            });
+
+            displayCountries(sortedCountries, showSignatureMethods);
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+// Add event listeners for the dropdown alternatives
+document.getElementById('sortAsc').addEventListener('click', () => {
+    sortCountries('asc');
+});
+
+document.getElementById('sortDesc').addEventListener('click', () => {
+    sortCountries('desc');
+});
+
+document.getElementById('sortTotalAsc').addEventListener('click', () => {
+    sortCountries('asc', 'totalCount');
+});
+
+document.getElementById('sortTotalDesc').addEventListener('click', () => {
+    sortCountries('desc', 'totalCount');
+});
+
+document.getElementById('sortAlphaAsc').addEventListener('click', () => {
+    sortCountries('asc', 'alphabetical');
+});
+
+document.getElementById('sortAlphaDesc').addEventListener('click', () => {
+    sortCountries('desc', 'alphabetical');
+});
+
+document.getElementById('sortPerCapitaAsc').addEventListener('click', () => {
+    sortCountries('asc', 'perCapita');
+});
+
+document.getElementById('sortPerCapitaDesc').addEventListener('click', () => {
+    sortCountries('desc', 'perCapita');
+});
+
+// Toggle state for showing/hiding signature methods
+let showSignatureMethods = false;
+
+// Add event listener for the "Show signature by method" button
+document.getElementById('showSignatureByMethod').addEventListener('click', function () {
+    const button = this;
+    showSignatureMethods = !showSignatureMethods;
+
+    if (showSignatureMethods) {
+        button.textContent = "Hide signatures by method";
+    } else {
+        button.textContent = "Show signatures by method";
+    }
+
+    fetch('https://eci.ec.europa.eu/045/public/api/report/map')
+        .then(response => response.json())
+        .then(data => {
+            const sortedCountries = data.signatureCountryCount.sort((a, b) => b.percentage - a.percentage);
+            displayCountries(sortedCountries, showSignatureMethods);
+
+            if (showSignatureMethods) {
+                // Calculate total EID count
+                const totalEidCount = sortedCountries.reduce((sum, country) => sum + country.eidCount, 0);
+
+                // Calculate total form signatures count
+                const totalFormSignaturesCount = sortedCountries.reduce((sum, country) => sum + country.formCount, 0);
+
+                // Display total EID count
+                const totalEidCountElement = document.createElement('p');
+                totalEidCountElement.className = 'total-eid-count';
+                totalEidCountElement.textContent = `Total EID Signatures: ${totalEidCount.toLocaleString()}`;
+
+                // Display total form signatures count
+                const totalFormSignaturesCountElement = document.createElement('p');
+                totalFormSignaturesCountElement.className = 'total-form-signatures-count';
+                totalFormSignaturesCountElement.textContent = `Total Form Signatures: ${totalFormSignaturesCount.toLocaleString()}`;
+
+                // Append the total EID count element to the "TotalEIDsignatures" div
+                const totalEidSignaturesDiv = document.getElementById('TotalEIDsignatures');
+                totalEidSignaturesDiv.innerHTML = ''; // Clear any existing content
+                totalEidSignaturesDiv.appendChild(totalEidCountElement);
+
+                // Append the total form signatures count element to the "TotalFormSignatures" div
+                const totalFormSignaturesDiv = document.getElementById('TotalFormSignatures');
+                totalFormSignaturesDiv.innerHTML = ''; // Clear any existing content
+                totalFormSignaturesDiv.appendChild(totalFormSignaturesCountElement);
+            } else {
+                // Clear the content of the "TotalEIDsignatures" and "TotalFormSignatures" divs
+                const totalEidSignaturesDiv = document.getElementById('TotalEIDsignatures');
+                totalEidSignaturesDiv.innerHTML = ''; // Clear any existing content
+
+                const totalFormSignaturesDiv = document.getElementById('TotalFormSignatures');
+                totalFormSignaturesDiv.innerHTML = ''; // Clear any existing content
+            }
+        })
+        .catch(error => console.error('Error:', error));
+});
+// Function to fetch and update total progress data
+function updateTotalProgress() {
+    fetch('https://eci.ec.europa.eu/045/public/api/report/progression')
+        .then(response => response.json())
+        .then(data => {
+            const { signatureCount, goal } = data;
+
+            // Calculate the percentage towards the goal
+            const percentage = ((signatureCount / goal) * 100).toFixed(2);
+
+            // Update the total progress div with the calculated values
+            const totalProgressDiv = document.querySelector('.total-progress');
+            totalProgressDiv.innerHTML = `
+                <h2>Total Progress</h2>
+                <p>Total Count: ${signatureCount.toLocaleString()}</p>
+                <p>Percentage to Goal: ${percentage.toLocaleString()}%</p>
+                <div class="progress-bar">
+                    <div class="progress" style="width: ${percentage}%"></div>
+                </div>
+            `;
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+// Fetch and display country data
+fetch('https://eci.ec.europa.eu/045/public/api/report/map')
+    .then(response => response.json())
+    .then(data => {
+        console.log(data); // Log the data to see what's being returned
+
+        // Sort the countries by percentage
+        const sortedCountries = data.signatureCountryCount.sort((a, b) => b.percentage - a.percentage);
+
+        // Display the countries initially
+        displayCountries(sortedCountries);
+    })
+    .catch(error => console.error('Error:', error));
+
+// Initial fetch and update of total progress data
+updateTotalProgress();
+
+// Set interval to update total progress data every 3 seconds
+setInterval(updateTotalProgress, 3000);

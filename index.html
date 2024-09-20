@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" class="background animated-background">
+
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Stop Killing Games Tracker</title>
+    <link href="StyleSheet.css" rel="stylesheet">
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+</head>
+
+<body>
+    <nav class="navbar">
+        <ul>
+            <li><a href="index.html" class="active">Home</a></li>
+            <li><a href="datahistory.html">Data History</a></li>
+        </ul>
+    </nav>
+    <div class="title">Stop Killing Games progress tracker</div>
+    <div class="image"><img src="images/Stopkillinggames.jpeg" alt="Stop Killing Games Logo"></div>
+    <div class="progressContainer">
+        <div class="total-progress"></div>
+    </div>
+    <div class="threshold-progress-container">
+        <h2 class="">Minimum Threshold Progress</h2>
+        <div class="threshold-progress">
+            <div class="threshold-progress-bar"></div>
+        </div>
+    </div>
+    <a class="SignContainer" href="https://eci.ec.europa.eu/045/public/#/screen/home"><button class="SignButton">Sign
+            now!</button></a>
+    <div class="dropdownContainer">
+        <div class="dropdown">
+            <button class="dropbtn">Sort</button>
+            <div id="myDropdown" class="dropdown-content">
+                <a id="sortDesc" href="#">% highest first</a>
+                <a id="sortAsc" href="#">% lowest first</a>
+                <a id="sortTotalDesc" href="#">Signatures highest first</a>
+                <a id="sortTotalAsc" href="#">Signatures lowest first</a>
+                <a id="sortAlphaAsc" href="#">Alphabetical A-Z</a>
+                <a id="sortAlphaDesc" href="#">Alphabetical Z-A</a>
+                <a id="sortPerCapitaDesc" href="#">Signatures per capita highest first</a>
+                <a id="sortPerCapitaAsc" href="#">Signatures per capita lowest first</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="TotalSignaturesByMethod">
+        <div id="TotalEIDsignatures" class="TotalEIDsignatures"></div>
+        <div id="TotalFormSignatures" class="TotalFormSignatures"></div>
+    </div>
+    <div class="clearfix" id="myDiv"></div>
+    <button id="showSignatureByMethod" class="actionButton">Show signatures by method</button>
+    <a><button id="backgroundButton" class="Backgroundbutton"><img src="/images/animation.svg"></button></a>
+    <div class="buttonContainer"></div>
+    <script src="main.js"></script>
+    <script src="nothingimportant.js"></script>
+    <footer>Not affiliated with <a href="https://www.stopkillinggames.com/">stopkillinggames.com</a></footer>
+</body>
+
+
+</html>

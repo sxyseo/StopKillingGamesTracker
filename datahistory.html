@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" class="background animated-background">
+
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Stop Killing Games Tracker</title>
+    <link href="StyleSheet.css" rel="stylesheet">
+    <link href="datahistory.css" rel="stylesheet">
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
+</head>
+
+<body>
+    <nav class="navbar">
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="datahistory.html" class="active">Data History</a></li>
+        </ul>
+    </nav>
+    <div class="chart-container">
+        <canvas id="myChart"></canvas>
+    </div>
+    <p class="disclaimertext">New data is saved every 24 hours. Data before 2024-08-24 is taken from the web archive.
+    </p>
+    <div class="button-container">
+        <button id="showAll" class="actionButton">Show All</button>
+        <button id="showLast30Days" class="actionButton">Show Last 30 Days</button>
+        <button id="selectAll" class="actionButton">Select All</button>
+        <button id="deselectAll" class="actionButton">Deselect All</button>
+        <button id="switchYAxis" class="actionButton">Toggle Percentage</button>
+    </div>
+    <div id="totalIncrease" class="totalIncrease"></div>
+    <div id="countryList" class="country-list"></div>
+    <a><button id="backgroundButton" class="Backgroundbutton"><img src="/images/animation.svg"></button></a>
+    <div class="buttonContainer"></div>
+    <script src="datahistory.js"></script>
+    <script src="nothingimportant.js"></script>
+</body>
+<footer>Not affiliated with <a href="https://www.stopkillinggames.com/">stopkillinggames.com</a></footer>
+
+</html>
