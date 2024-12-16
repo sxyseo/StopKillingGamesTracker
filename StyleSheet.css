@@ -367,9 +367,6 @@ a {
 .buttonContainer {
     display: flex;
     justify-content: center;
-    margin-top: 70px;
-
-    /* Add margin to the bottom */
 }
 
 .actionButton {
@@ -440,7 +437,7 @@ footer a:hover {
 
 .Backgroundbutton {
     display: flex;
-    margin: auto auto 70px auto;
+    margin: auto;
     padding: 5px 5px;
     font-size: 0.8em;
     color: white;
@@ -590,4 +587,11 @@ footer a:hover {
     --elementColor4: rgba(45, 45, 45, 0.7);
     --elementColorTransparent: rgba(38, 41, 47, 0.5);
     --textColor: rgb(255, 255, 255);
+}
+
+.OSS-notifier {
+    text-align: center;
+    font-size: 0.9em;
+    color: rgb(175, 175, 175);
+    margin-bottom: 70px;
 }
