@@ -358,7 +358,7 @@ footer {
     box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
 }
 
-footer a {
+a {
     color: #4caf50;
     text-decoration: none;
     transition: color 0.3s ease;
@@ -367,8 +367,8 @@ footer a {
 .buttonContainer {
     display: flex;
     justify-content: center;
-    margin-top: 20px;
-    margin-bottom: 20px;
+    margin-top: 70px;
+
     /* Add margin to the bottom */
 }
 
