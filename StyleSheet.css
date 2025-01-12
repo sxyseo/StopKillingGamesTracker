@@ -593,5 +593,8 @@ footer a:hover {
     text-align: center;
     font-size: 0.9em;
     color: rgb(175, 175, 175);
-    margin-bottom: 70px;
+}
+
+.space {
+    height: 60px;
 }
