@@ -759,9 +759,18 @@ function updateTotalProgress() {
         .then(response => response.json())
         .then(data => {
             const { signatureCount, goal } = data;
-
+            if(signatureCount >= goal){
+                displayFireworks();
+            }
             // Calculate the percentage towards the goal
             const percentage = ((signatureCount / goal) * 100).toFixed(2);
+
+            //Display confetti when a signature is added
+            if (previousSignatureCount < signatureCount && previousSignatureCount !== 0) {
+                confetti();
+            }
+
+            previousSignatureCount = signatureCount;
 
             // Update the total progress div with the calculated values
             const totalProgressDiv = document.querySelector('.total-progress');
@@ -816,11 +825,50 @@ fetch('https://eci.ec.europa.eu/045/public/api/report/map')
     })
     .catch(error => console.error('Error:', error));
 
+function displayFireworks() {
+    if (!fireworksDisplayed) {
+        fireworksDisplayed = true;
+        const duration = 5 * 1000,
+        animationEnd = Date.now() + duration,
+        defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+        function randomInRange(min, max) {
+        return Math.random() * (max - min) + min;
+        }
+
+        const interval = setInterval(function() {
+        const timeLeft = animationEnd - Date.now();
+
+        if (timeLeft <= 0) {
+            return clearInterval(interval);
+        }
+
+        const particleCount = 50 * (timeLeft / duration);
+
+        // since particles fall down, start a bit higher than random
+        confetti(
+            Object.assign({}, defaults, {
+            particleCount,
+            origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+            })
+        );
+        confetti(
+            Object.assign({}, defaults, {
+            particleCount,
+            origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+            })
+        );
+        }, 250);
+    }
+}
+
+let fireworksDisplayed = false;
+let previousSignatureCount = 0;
 // Initial fetch and update of total progress data
 updateTotalProgress();
 
 // Set interval to update total progress data every 3 seconds
-setInterval(()=> updateTotalProgress, 3000);
+setInterval(()=> updateTotalProgress(), 3000);
 
 //Update time left every second
 const startTime = new Date('31 jul 2024');
@@ -828,3 +876,5 @@ const endTime = new Date('31 jul 2025');
 const clockAnim=["🕛","🕐","🕑","🕒","🕓","🕔","🕕","🕖","🕗","🕘","🕙","🕚"];
 let animIndex=0;
 setInterval(() => updateTimeLeft(startTime, endTime), 1000);
+
+

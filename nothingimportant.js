@@ -26,18 +26,12 @@ document.getElementById('backgroundButton').addEventListener('click', function (
 window.addEventListener('scroll', function () {
     var scrollPosition = window.scrollY;
     var item2 = document.querySelector('.navbar');
-    var backToTop = document.querySelector('.backToTop');
 
     if (scrollPosition > 15) {
         item2.style.backgroundColor = 'var(--elementColor4)';
         item2.style.borderRadius = '0px 0px 35px 35px';
-        backToTop.style.visibility = 'visible';
-        backToTop.style.opacity = '1';
     } else {
         item2.style.borderRadius = '';
         item2.style.backgroundColor = '';
-        backToTop.style.visibility = '';
-        backToTop.style.opacity = '';
-
     }
 });
