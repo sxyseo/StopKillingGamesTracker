@@ -61,12 +61,17 @@ body {
     margin-bottom: 10px;
 }
 
+.schedule-status {
+    font-size: 1em;
+    margin: 0.5em 0;
+    color: rgb(235, 235, 235);
+}
+
 .total-progress p {
     font-size: 1.2em;
     margin: 5px 0;
 }
 
-/* Progress bar container */
 /* Progress bar container */
 .progress-bar {
     position: relative;
