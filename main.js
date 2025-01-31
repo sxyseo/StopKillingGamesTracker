@@ -777,6 +777,31 @@ function updateTotalProgress() {
         .catch(error => console.error('Error:', error));
 }
 
+function updateTimeLeft(startTime, endTime) {
+    const now = new Date();
+    const timeLeft = endTime - now;
+    const daysLeft = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+    const hoursLeft = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutesLeft = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+    const secondsLeft = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+    const timeLeftDiv = document.querySelector('.time-left');
+    timeLeftDiv.innerHTML = `
+        <h2>Time Left</h2>
+        <p>${clockAnim[animIndex]}${daysLeft}d ${hoursLeft}h ${minutesLeft}m ${secondsLeft}s</p>
+        <div class="progress-bar">
+            <div class="progress-danger" style="width: ${100 - (timeLeft / (endTime - startTime)) * 100}%"></div>
+        </div>
+        <h2>${document.querySelector('.total-progress').querySelector('.progress').style.width > 100 - (timeLeft / (endTime - startTime)) * 100? "We're ahead of schedule!":  "We're behind schedule! We need more signatures!"
+            }
+        </h2>
+    `;
+    animIndex++;
+    if (animIndex >= clockAnim.length) {
+        animIndex = 0;
+    }
+}
+
 // Fetch and display country data
 fetch('https://eci.ec.europa.eu/045/public/api/report/map')
     .then(response => response.json())
@@ -795,4 +820,11 @@ fetch('https://eci.ec.europa.eu/045/public/api/report/map')
 updateTotalProgress();
 
 // Set interval to update total progress data every 3 seconds
-setInterval(updateTotalProgress, 3000);
+setInterval(()=> updateTotalProgress, 3000);
+
+//Update time left every second
+const startTime = new Date('31 jul 2024');
+const endTime = new Date('31 jul 2025');
+const clockAnim=["🕛","🕐","🕑","🕒","🕓","🕔","🕕","🕖","🕗","🕘","🕙","🕚"];
+let animIndex=0;
+setInterval(() => updateTimeLeft(startTime, endTime), 1000);

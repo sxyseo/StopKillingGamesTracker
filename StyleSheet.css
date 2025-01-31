@@ -35,7 +35,7 @@ body {
     margin-top: 20px;
 }
 
-.progressContainer {
+.progressContainer, .time-left-container {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -44,7 +44,7 @@ body {
 }
 
 /* Total progress tracker */
-.total-progress {
+.total-progress, .time-left {
     text-align: center;
     color: white;
     margin: 20px 0;
@@ -76,6 +76,16 @@ body {
     overflow: hidden;
     margin-top: 10px;
     height: 20px;
+}
+
+/* Progress bar fill for the time limit */
+.progress-danger {
+    height: 100%;
+    background-color: red;
+    width: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
 /* Progress bar fill for the first 100% */
@@ -501,7 +511,7 @@ footer a:hover {
     background-color: #ffffff;
 }
 
-.threshold-progress-container h2 {
+.threshold-progress-container h2, .time-left-container h2 {
     font-size: 1.5em;
     margin-bottom: 10px;
     color: white;
