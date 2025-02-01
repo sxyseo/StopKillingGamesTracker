@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Stop Killing Games Tracker</title>
+    <link href="../StyleSheet.css" rel="stylesheet">
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        #myDiv {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .update-info {
+            color: lightgray;
+            font-size: 12px;
+        }
+        .eu-flag {
+            width: 125px;
+            height: 78px;
+            border-radius: 10px;
+            margin: 0 auto 10px;
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="myDiv"></div>
+    <script src="https://cdn.jsdelivr.net/npm/@tsparticles/confetti@3.0.3/tsparticles.confetti.bundle.min.js"></script>
+    <script>
+        function displayEUCard(data) {
+            const div = document.createElement('div');
+            div.className = "country-data";
+
+            // Add EU flag
+            const flagImg = document.createElement('img');
+            flagImg.className = 'eu-flag';
+            flagImg.src = 'https://upload.wikimedia.org/wikipedia/commons/b/b7/Flag_of_Europe.svg';
+            flagImg.alt = 'European Union Flag';
+            div.appendChild(flagImg);
+
+            // Add title
+            const nameElement = document.createElement('p');
+            nameElement.className = 'country-name';
+            nameElement.textContent = 'Total Progress';
+            div.appendChild(nameElement);
+
+            // Add total count
+            const totalCountElement = document.createElement('p');
+            totalCountElement.className = 'total-count';
+            totalCountElement.textContent = `Total Count: ${data.signatureCount.toLocaleString()}`;
+            div.appendChild(totalCountElement);
+
+            // Add goal as threshold
+            const thresholdElement = document.createElement('p');
+            thresholdElement.className = 'treshold';
+            thresholdElement.textContent = `Goal: ${data.goal.toLocaleString()}`;
+            div.appendChild(thresholdElement);
+
+            // Add progress bar
+            const progressBar = document.createElement('div');
+            progressBar.className = 'progress-bar';
+            
+            const percentage = (data.signatureCount / data.goal) * 100;
+            
+            const progressBarFill = document.createElement('div');
+            progressBarFill.className = 'progress';
+            progressBarFill.style.width = `${percentage}%`;
+            
+            const percentageText = document.createElement('span');
+            percentageText.className = 'percentage-text';
+            percentageText.textContent = `${percentage.toFixed(2)}%`;
+            
+            progressBar.appendChild(progressBarFill);
+            progressBar.appendChild(percentageText);
+            div.appendChild(progressBar);
+
+            // Add update message
+            const updateInfo = document.createElement('p');
+            updateInfo.className = 'update-info';
+            updateInfo.textContent = 'Data is updated every 3 seconds';
+            div.appendChild(updateInfo);
+
+            document.getElementById('myDiv').appendChild(div);
+        }
+
+        function updateData() {
+            fetch('https://eci.ec.europa.eu/045/public/api/report/progression')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('myDiv').innerHTML = '';
+                    displayEUCard(data);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        // Initial load
+        updateData();
+
+        // Update every 10 minutes
+        setInterval(updateData, 3000);
+    </script>
+</body>
+</html>
