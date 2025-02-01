@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Stop Killing Games Tracker</title>
+    <link href="../StyleSheet.css" rel="stylesheet">
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        #myDiv {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .update-info {
+            color: lightgray;
+            font-size: 12px; 
+        }
+    </style>
+</head>
+
+<body>
+    <div id="myDiv"></div>
+    <script src="https://cdn.jsdelivr.net/npm/@tsparticles/confetti@3.0.3/tsparticles.confetti.bundle.min.js"></script>
+    <script src="../main.js"></script>
+    <script src="../nothingimportant.js"></script>
+    <script>
+      fetch('https://eci.ec.europa.eu/045/public/api/report/map')
+        .then(response => response.json())
+        .then(data => {
+          const filtered = data.signatureCountryCount.filter(country => country.countryCode === 'lt');
+          displayCountries(filtered, false, true); // showUpdateMessage = true
+        })
+        .catch(error => console.error('Error:', error));
+    </script>
+</body>
+</html>

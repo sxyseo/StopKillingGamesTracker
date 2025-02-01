@@ -99,7 +99,7 @@ function updateThresholdProgress(countries) {
     }
 }
 // Function to display countries
-function displayCountries(countries, showMethods = false) {
+function displayCountries(countries, showMethods = false, showUpdateMessage = false) {
     const parentDiv = document.getElementById('myDiv');
     parentDiv.innerHTML = ''; // Clear existing content
 
@@ -378,11 +378,17 @@ function displayCountries(countries, showMethods = false) {
                 div.appendChild(eidCountElement);
             }
             div.appendChild(countryProgressBar);
-            if ((percentage >= 100) && !showMethods) {
+            if ((percentage >= 100) && !showMethods && !showUpdateMessage) {
                 div.appendChild(disclaimerElement);
             }
 
-
+            // Only add "Data is updated every 10 minutes" if showUpdateMessage is true
+            if (showUpdateMessage) {
+                const updateInfo = document.createElement('p');
+                updateInfo.className = 'update-info'; // give it a unique class
+                updateInfo.textContent = 'Data is updated every 10 minutes.';
+                div.appendChild(updateInfo);
+            }
 
             // Append the new div element to the parent div
             parentDiv.appendChild(div);
@@ -876,5 +882,3 @@ const endTime = new Date('31 jul 2025');
 const clockAnim=["🕛","🕐","🕑","🕒","🕓","🕔","🕕","🕖","🕗","🕘","🕙","🕚"];
 let animIndex=0;
 setInterval(() => updateTimeLeft(startTime, endTime), 1000);
-
-
