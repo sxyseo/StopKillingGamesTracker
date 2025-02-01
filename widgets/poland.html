@@ -34,13 +34,21 @@
     <script src="../main.js"></script>
     <script src="../nothingimportant.js"></script>
     <script>
-      fetch('https://eci.ec.europa.eu/045/public/api/report/map')
-        .then(response => response.json())
-        .then(data => {
-          const filtered = data.signatureCountryCount.filter(country => country.countryCode === 'pl');
-          displayCountries(filtered, false, true); // showUpdateMessage = true
-        })
-        .catch(error => console.error('Error:', error));
+        function updateData() {
+            fetch('https://eci.ec.europa.eu/045/public/api/report/map')
+                .then(response => response.json())
+                .then(data => {
+                    const filtered = data.signatureCountryCount.filter(country => country.countryCode === 'pl');
+                    displayCountries(filtered, false, true);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        // Initial load
+        updateData();
+
+        // Update every 10 minutes (600000 milliseconds)
+        setInterval(updateData, 600000);
     </script>
 </body>
 </html>
