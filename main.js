@@ -877,8 +877,8 @@ updateTotalProgress();
 setInterval(()=> updateTotalProgress(), 3000);
 
 //Update time left every second
-const startTime = new Date('31 jul 2024');
-const endTime = new Date('31 jul 2025');
+const startTime = new Date('31 jul 2024 GMT+0200');
+const endTime = new Date('31 jul 2025 GMT+0200');
 const clockAnim=["🕛","🕐","🕑","🕒","🕓","🕔","🕕","🕖","🕗","🕘","🕙","🕚"];
 let animIndex=0;
 setInterval(() => updateTimeLeft(startTime, endTime), 1000);
