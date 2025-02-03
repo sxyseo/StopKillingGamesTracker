@@ -779,15 +779,9 @@ function updateTotalProgress() {
             previousSignatureCount = signatureCount;
 
             // Update the total progress div with the calculated values
-            const totalProgressDiv = document.querySelector('.total-progress');
-            totalProgressDiv.innerHTML = `
-                <h2>Total Progress</h2>
-                <p>Total Count: ${signatureCount.toLocaleString()}</p>
-                <p>Percentage to Goal: ${percentage.toLocaleString()}%</p>
-                <div class="progress-bar">
-                    <div class="progress" style="width: ${percentage}%"></div>
-                </div>
-            `;
+            document.querySelector('.total-count').innerText = `Total Count: ${signatureCount.toLocaleString()}`;
+            document.querySelector('.percentage-to-goal').innerText = `Percentage to Goal: ${percentage.toLocaleString()}%`;
+            document.querySelector('.total-progress').querySelector('.progress').style.width = `${percentage}%`;
         })
         .catch(error => console.error('Error:', error));
 }
@@ -800,19 +794,10 @@ function updateTimeLeft(startTime, endTime) {
     const minutesLeft = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
     const secondsLeft = Math.floor((timeLeft % (1000 * 60)) / 1000);
 
-    const timeLeftDiv = document.querySelector('.time-left');
-    timeLeftDiv.innerHTML = `
-        <h2>Time Left</h2>
-        <p>${clockAnim[animIndex]}${daysLeft}d ${hoursLeft}h ${minutesLeft}m ${secondsLeft}s</p>
-        <div class="progress-bar">
-            <div class="progress-danger" style="width: ${100 - (timeLeft / (endTime - startTime)) * 100}%"></div>
-        </div>
-        <h3 class="schedule-status">${document.querySelector('.total-progress').querySelector('.progress').style.width > 100 - (timeLeft / (endTime - startTime)) * 100? `We're ahead of schedule!`:  `We're behind schedule!`
-            }
-            <br/>
-            We need at least ${((1000000-previousSignatureCount)/daysLeft).toFixed(2)} signatures per day on average!
-        </h3>
-    `;
+    document.querySelector('#time-left-text').innerText = `${clockAnim[animIndex]}${daysLeft}d ${hoursLeft}h ${minutesLeft}m ${secondsLeft}s`;
+    document.querySelector('.time-left').querySelector('.progress-danger').style.width = `${100 - (timeLeft / (endTime - startTime)) * 100}%`;
+    document.querySelector('.schedule-status').innerText = document.querySelector('.total-progress').querySelector('.progress').style.width > 100 - (timeLeft / (endTime - startTime)) * 100? `We're ahead of schedule!`:  `We're behind schedule!`;
+    document.querySelector('.daily-signatures-needed').innerText = ` We need at least ${((1000000-previousSignatureCount)/daysLeft).toFixed(2)} signatures per day on average!`;
     animIndex++;
     if (animIndex >= clockAnim.length) {
         animIndex = 0;

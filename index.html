@@ -22,11 +22,30 @@
     </nav>
     <div class="title">Stop Killing Games progress tracker</div>
     <div class="image"><img src="images/Stopkillinggames.jpeg" alt="Stop Killing Games Logo"></div>
+    <a class="SignContainer" href="https://eci.ec.europa.eu/045/public/#/screen/home"><button class="SignButton">Sign
+        now!</button></a>
     <div class="progressContainer">
-        <div class="total-progress"></div>
+        <div class="total-progress">
+            <h2>Total Progress</h2>
+            <p class="total-count">Loading total signature count...</p>
+            <p class="percentage-to-goal"></p>
+            <div class="progress-bar">
+                <div class="progress" style="width: 0%"></div>
+            </div>
+        </div>
     </div>
     <div class="time-left-container">
-        <div class="time-left"></div>
+        <div class="time-left">  
+            <h2>Time Left</h2>
+            <p id="time-left-text">Loading remaining time...</p>
+            <div class="progress-bar">
+                <div class="progress-danger" style="width: 0%"></div>
+            </div>
+            <h3 class="schedule-status">
+            </h3>
+            <h3 class="daily-signatures-needed">
+            </h3>
+        </div>
     </div>
     <div class="threshold-progress-container">
         <h2 class="">Minimum Threshold Progress</h2>
@@ -34,8 +53,6 @@
             <div class="threshold-progress-bar"></div>
         </div>
     </div>
-    <a class="SignContainer" href="https://eci.ec.europa.eu/045/public/#/screen/home"><button class="SignButton">Sign
-            now!</button></a>
     <div class="dropdownContainer">
         <div class="dropdown">
             <button class="dropbtn">Sort</button>
