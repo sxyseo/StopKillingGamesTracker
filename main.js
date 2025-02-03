@@ -779,9 +779,17 @@ function updateTotalProgress() {
             previousSignatureCount = signatureCount;
 
             // Update the total progress div with the calculated values
-            document.querySelector('.total-count').innerText = `Total Count: ${signatureCount.toLocaleString()}`;
-            document.querySelector('.percentage-to-goal').innerText = `Percentage to Goal: ${percentage.toLocaleString()}%`;
-            document.querySelector('.total-progress').querySelector('.progress').style.width = `${percentage}%`;
+            if(document.querySelector('.total-count').innerText != `Total Count: ${signatureCount.toLocaleString()}`){
+                document.querySelector('.total-count').innerText = `Total Count: ${signatureCount.toLocaleString()}`;
+            }
+
+            if(document.querySelector('.percentage-to-goal').innerText != `Percentage to Goal: ${percentage.toLocaleString()}%`){
+                document.querySelector('.percentage-to-goal').innerText = `Percentage to Goal: ${percentage.toLocaleString()}%`;
+            }
+
+            if(document.querySelector('.total-progress').querySelector('.progress').style.width != `${percentage}%`){
+                document.querySelector('.total-progress').querySelector('.progress').style.width = `${percentage}%`;
+            }
         })
         .catch(error => console.error('Error:', error));
 }
@@ -795,9 +803,18 @@ function updateTimeLeft(startTime, endTime) {
     const secondsLeft = Math.floor((timeLeft % (1000 * 60)) / 1000);
 
     document.querySelector('#time-left-text').innerText = `${clockAnim[animIndex]}${daysLeft}d ${hoursLeft}h ${minutesLeft}m ${secondsLeft}s`;
-    document.querySelector('.time-left').querySelector('.progress-danger').style.width = `${100 - (timeLeft / (endTime - startTime)) * 100}%`;
-    document.querySelector('.schedule-status').innerText = document.querySelector('.total-progress').querySelector('.progress').style.width > 100 - (timeLeft / (endTime - startTime)) * 100? `We're ahead of schedule!`:  `We're behind schedule!`;
-    document.querySelector('.daily-signatures-needed').innerText = ` We need at least ${((1000000-previousSignatureCount)/daysLeft).toFixed(2)} signatures per day on average!`;
+    if(document.querySelector('.time-left').querySelector('.progress-danger').style.width = `${100 - (timeLeft / (endTime - startTime)) * 100}%`){
+        document.querySelector('.time-left').querySelector('.progress-danger').style.width = `${100 - (timeLeft / (endTime - startTime)) * 100}%`;
+    }
+
+    if(document.querySelector('.schedule-status').innerText != document.querySelector('.total-progress').querySelector('.progress').style.width > 100 - (timeLeft / (endTime - startTime)) * 100? `We're ahead of schedule!`:  `We're behind schedule!`){
+        document.querySelector('.schedule-status').innerText = document.querySelector('.total-progress').querySelector('.progress').style.width > 100 - (timeLeft / (endTime - startTime)) * 100? `We're ahead of schedule!`:  `We're behind schedule!`;
+    }
+    
+    if(document.querySelector('.daily-signatures-needed').innerText != `We need at least ${((1000000-previousSignatureCount)/daysLeft).toFixed(2)} signatures per day on average!`){
+        document.querySelector('.daily-signatures-needed').innerText = `We need at least ${((1000000-previousSignatureCount)/daysLeft).toFixed(2)} signatures per day on average!`;
+    }
+
     animIndex++;
     if (animIndex >= clockAnim.length) {
         animIndex = 0;
