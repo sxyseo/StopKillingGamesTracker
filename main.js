@@ -811,8 +811,8 @@ function updateTimeLeft(startTime, endTime) {
         document.querySelector('.schedule-status').innerText = document.querySelector('.total-progress').querySelector('.progress').style.width > 100 - (timeLeft / (endTime - startTime)) * 100? `We're ahead of schedule!`:  `We're behind schedule!`;
     }
     
-    if(document.querySelector('.daily-signatures-needed').innerText != `We need at least ${((1000000-previousSignatureCount)/daysLeft).toFixed(2)} signatures per day on average!`){
-        document.querySelector('.daily-signatures-needed').innerText = `We need at least ${((1000000-previousSignatureCount)/daysLeft).toFixed(2)} signatures per day on average!`;
+    if(document.querySelector('.daily-signatures-needed').innerText = `We need at least ${Math.ceil((1000000-previousSignatureCount)/daysLeft)} signatures per day on average!`){
+        document.querySelector('.daily-signatures-needed').innerText = `We need at least ${Math.ceil((1000000-previousSignatureCount)/daysLeft)} signatures per day on average!`;
     }
 
     animIndex++;
