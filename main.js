@@ -807,8 +807,10 @@ function updateTimeLeft(startTime, endTime) {
         <div class="progress-bar">
             <div class="progress-danger" style="width: ${100 - (timeLeft / (endTime - startTime)) * 100}%"></div>
         </div>
-        <h3 class="schedule-status">${document.querySelector('.total-progress').querySelector('.progress').style.width > 100 - (timeLeft / (endTime - startTime)) * 100? "We're ahead of schedule!":  "We're behind schedule! We need more signatures!"
+        <h3 class="schedule-status">${document.querySelector('.total-progress').querySelector('.progress').style.width > 100 - (timeLeft / (endTime - startTime)) * 100? `We're ahead of schedule!`:  `We're behind schedule!`
             }
+            <br/>
+            We need at least ${((1000000-previousSignatureCount)/daysLeft).toFixed(2)} signatures per day on average!
         </h3>
     `;
     animIndex++;
