@@ -629,3 +629,20 @@ footer a:hover {
 .space {
     height: 60px;
 }
+
+.paused {
+  animation: none !important;
+  background-position: 0 0 !important;
+}
+
+.country-data .progress {
+    background: #4caf50 !important;
+    animation: none !important;
+}
+
+/* Keep the gradient animation for the main progress bar */
+.main-progress .progress {
+    background: linear-gradient(90deg, #388E3C, #65ca68, #388E3C);
+    background-size: 200% 100%;
+    animation: progress 2s linear infinite;
+}

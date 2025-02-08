@@ -2,6 +2,7 @@ document.getElementById('backgroundButton').addEventListener('click', function (
     const backgroundElement = document.querySelector('.background');
     const buttonImage = document.querySelector('#backgroundButton img');
     const button = document.getElementById('backgroundButton');
+    const allProgressBars = document.querySelectorAll('.progress, .progress-second, .progress-third, .progress-danger');
 
     if (backgroundElement.classList.contains('animated-background')) {
         backgroundElement.classList.remove('animated-background');
@@ -20,6 +21,10 @@ document.getElementById('backgroundButton').addEventListener('click', function (
     button.addEventListener('animationend', function () {
         button.classList.remove('rotate');
     }, { once: true });
+
+    allProgressBars.forEach(bar => {
+        bar.classList.toggle('paused');
+    });
 });
 
 
