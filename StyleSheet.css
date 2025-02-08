@@ -86,21 +86,37 @@ body {
 /* Progress bar fill for the time limit */
 .progress-danger {
     height: 100%;
-    background: linear-gradient(45deg, #b30000, #ff6666);
-    width: 0;
+    width: 100%;
     position: absolute;
     top: 0;
     left: 0;
+    
+    /* Create a repeating gradient */
+    background: linear-gradient(90deg, #b30000 0%, #ff6666 50%, #b30000 100%);
+    background-size: 200% 100%; /* Makes the gradient twice as wide */
+    
+    animation: progress 2s linear infinite;
+}
+
+@keyframes progress {
+    0% {
+        background-position: 100% 0;
+    }
+    100% {
+        background-position: -100% 0;
+    }
 }
 
 /* Progress bar fill for the first 100% */
 .progress {
     height: 100%;
-    background-color: #4caf50;
     width: 0;
     position: absolute;
     top: 0;
     left: 0;
+    background: linear-gradient(90deg,#388E3C ,#65ca68, #388E3C);
+    background-size: 200% 100%;
+    animation: progress 2s linear infinite;
 }
 
 /* Progress bar fill for the second 100% */
