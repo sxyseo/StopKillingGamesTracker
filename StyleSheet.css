@@ -13,6 +13,11 @@ body {
 .animated-background {
     animation: color 30s ease-in-out infinite;
 }
+@media (prefers-reduced-motion) {
+    .animated-background {
+        animation: none;
+    }
+}
 
 @keyframes color {
     0% {
@@ -97,6 +102,11 @@ body {
     
     animation: progress 2s linear infinite;
 }
+@media (prefers-reduced-motion) {
+    .progress-danger {
+        animation: none;
+    }
+}
 
 @keyframes progress {
     0% {
@@ -117,6 +127,11 @@ body {
     background: linear-gradient(90deg,#388E3C ,#65ca68, #388E3C);
     background-size: 200% 100%;
     animation: progress 2s linear infinite;
+}
+@media (prefers-reduced-motion) {
+    .progress {
+        animation: none;
+    }
 }
 
 /* Progress bar fill for the second 100% */
@@ -197,6 +212,11 @@ body {
     cursor: pointer;
     transition: background-color 0.3s ease;
     width: 200px;
+}
+@media (prefers-reduced-motion) {
+    .dropbtn {
+        transition: none;
+    }
 }
 
 .dropbtn:hover {
@@ -341,6 +361,11 @@ body {
     position: relative;
     transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
 }
+@media (prefers-reduced-motion) {
+    .total-count {
+        transition: none;
+    }
+}
 
 .count-up {
     transform: translateY(-100%);
@@ -394,6 +419,11 @@ a {
     text-decoration: none;
     transition: color 0.3s ease;
 }
+@media (prefers-reduced-motion) {
+    a {
+        transition: none;
+    }
+}
 
 .buttonContainer {
     display: flex;
@@ -412,6 +442,11 @@ a {
     cursor: pointer;
     transition: background-color 0.3s ease;
     width: 200px;
+}
+@media (prefers-reduced-motion) {
+    .actionButton {
+        transition: none;
+    }
 }
 
 .actionButton:hover {
@@ -444,6 +479,11 @@ footer a:hover {
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.3s ease;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+@media (prefers-reduced-motion) {
+    .SignButton {
+        transition: none;
+    }
 }
 
 .SignButton:hover {
@@ -479,6 +519,11 @@ footer a:hover {
     transition: background-color 0.3s ease, transform 0.3s ease;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+@media (prefers-reduced-motion) {
+    .Backgroundbutton {
+        transition: none;
+    }
+}
 
 @keyframes rotate360 {
     from {
@@ -492,6 +537,11 @@ footer a:hover {
 
 .rotate {
     animation: rotate360 0.7s ease-in-out;
+}
+@media (prefers-reduced-motion) {
+    .rotate {
+        animation: none;
+    }
 }
 
 .threshold-progress-container {
@@ -569,6 +619,11 @@ footer a:hover {
     height: 60px;
     backdrop-filter: blur(5px);
 }
+@media (prefers-reduced-motion) {
+    .navbar {
+        transition: none;
+    }
+}
 
 .navbar ul {
     display: flex;
@@ -592,6 +647,11 @@ footer a:hover {
     text-decoration: none;
     transition: transform 200ms, border-top 100ms, border-bottom 200ms;
     border-radius: 10px;
+}
+@media (prefers-reduced-motion) {
+    .navbar li a {
+        transition: none;
+    }
 }
 
 .navbar li a:hover:not(.active) {
@@ -636,13 +696,18 @@ footer a:hover {
 }
 
 .country-data .progress {
-    background: #4caf50 !important;
-    animation: none !important;
+    background: #4caf50;
+    animation: none;
 }
 
 /* Keep the gradient animation for the main progress bar */
-.main-progress .progress {
+.main-progress {
     background: linear-gradient(90deg, #388E3C, #65ca68, #388E3C);
     background-size: 200% 100%;
     animation: progress 2s linear infinite;
+}
+@media (prefers-reduced-motion) {
+    .main-progress .progress {
+        animation: none;
+    }
 }
