@@ -368,13 +368,59 @@ body {
 }
 
 .count-up {
-    transform: translateY(-100%);
+    transform: translateY(100%);
     opacity: 0;
 }
 
 .count-down {
-    transform: translateY(100%);
-    opacity: 0;
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.today-count {
+    font-size: 1.2em;
+    margin: 5px 0;
+    color: #76c7c0;
+    font-weight: bold;
+    position: relative;
+    height: 1.5em; /* Fixed height to prevent layout shifts */
+    display: block;
+    overflow: hidden;
+}
+
+.today-count span {
+    position: absolute;
+    left: 0;
+    right: 0;
+    text-align: center;
+    transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+}
+
+.today-count.high-activity {
+    color: #4caf50;
+    animation: pulse 2s infinite;
+}
+
+.today-count.medium-activity {
+    color: #8bc34a;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@media (prefers-reduced-motion) {
+    .today-count.high-activity {
+        animation: none;
+    }
 }
 
 .image img {

@@ -774,6 +774,8 @@ function updateTotalProgress() {
             //Display confetti when a signature is added
             if (previousSignatureCount < signatureCount && previousSignatureCount !== 0) {
                 confetti();
+                // Also update today's count when new signatures come in, but don't show loading message
+                fetchTodaySignatures(false);
             }
 
             previousSignatureCount = signatureCount;
@@ -820,6 +822,134 @@ function updateTimeLeft(startTime, endTime) {
         animIndex = 0;
     }
 }
+
+// Function to fetch historical data and calculate today's signatures
+async function fetchTodaySignatures(showLoadingMessage = true) {
+    try {
+        const todayCountElement = document.querySelector('.today-count');
+        
+        // Only show loading message on initial load, not during updates
+        if (showLoadingMessage && !todayCountElement.dataset.hasValue) {
+            todayCountElement.textContent = 'Calculating today\'s signatures...';
+        }
+        
+        // Get current total from main API first
+        const currentResponse = await fetch('https://eci.ec.europa.eu/045/public/api/report/progression');
+        const currentData = await currentResponse.json();
+        const currentTotal = currentData.signatureCount;
+        
+        // Now get historical data
+        const response = await fetch('https://stopkillinggameshistoric-3a5f498bc1f0.herokuapp.com/historic-data');
+        let historicData = await response.json();
+        
+        // Sort data by timestamp in descending order (newest first)
+        historicData.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+        
+        // Find most recent entry that's not from today
+        const now = new Date();
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        
+        // Filter out entries from today
+        const previousEntries = historicData.filter(entry => {
+            const entryDate = new Date(entry.timestamp);
+            return entryDate < today;
+        });
+        
+        if (previousEntries.length > 0) {
+            // Get the most recent entry before today
+            const mostRecentEntry = previousEntries[0];
+            
+            // Calculate total signatures from that entry
+            const previousTotal = mostRecentEntry.data.reduce((sum, country) => sum + country.totalCount, 0);
+            
+            // Calculate signatures added today
+            const todaySignatures = currentTotal - previousTotal;
+            
+            // Get previous value for animation
+            const prevValue = parseInt(todayCountElement.dataset.value) || 0;
+            
+            // Update the UI with animation if it's different
+            if (todaySignatures !== prevValue) {
+                // Store the new value as a data attribute
+                todayCountElement.dataset.value = todaySignatures;
+                todayCountElement.dataset.hasValue = 'true';
+                
+                // Create and show the updated count with animation
+                if (prevValue > 0) {
+                    // Remove any existing content
+                    todayCountElement.innerHTML = '';
+                    
+                    // Create a temporary element to animate out
+                    const oldCount = document.createElement('span');
+                    oldCount.className = 'count-down';
+                    oldCount.textContent = `Signatures today: +${prevValue.toLocaleString()}`;
+                    
+                    // Create a new element to animate in
+                    const newCount = document.createElement('span');
+                    newCount.className = 'count-up';
+                    newCount.textContent = `Signatures today: +${todaySignatures.toLocaleString()}`;
+                    
+                    // Add both elements to container
+                    todayCountElement.appendChild(oldCount);
+                    todayCountElement.appendChild(newCount);
+                    
+                    // Trigger the animation after a brief delay
+                    setTimeout(() => {
+                        oldCount.style.transform = 'translateY(-100%)';
+                        oldCount.style.opacity = '0';
+                        newCount.style.transform = 'translateY(0)';
+                        newCount.style.opacity = '1';
+                    }, 10);
+                    
+                    // Clean up after animation completes
+                    setTimeout(() => {
+                        // Replace with a simple text to avoid positioning issues
+                        todayCountElement.innerHTML = '';
+                        const finalElement = document.createElement('span');
+                        finalElement.className = 'count-down'; // Already in correct position
+                        finalElement.textContent = `Signatures today: +${todaySignatures.toLocaleString()}`;
+                        todayCountElement.appendChild(finalElement);
+                    }, 600);
+                } else {
+                    // First load, just set the text
+                    todayCountElement.innerHTML = '';
+                    const textElement = document.createElement('span');
+                    textElement.className = 'count-down';
+                    textElement.textContent = `Signatures today: +${todaySignatures.toLocaleString()}`;
+                    todayCountElement.appendChild(textElement);
+                }
+                
+                // Add visual indicator based on activity level
+                todayCountElement.classList.remove('high-activity', 'medium-activity');
+                if (todaySignatures > 5000) {
+                    todayCountElement.classList.add('high-activity');
+                } else if (todaySignatures > 2000) {
+                    todayCountElement.classList.add('medium-activity');
+                }
+            }
+        } else {
+            console.error('No previous entries found to calculate today\'s signatures');
+            if (showLoadingMessage) {
+                todayCountElement.textContent = 'Could not calculate today\'s signatures';
+            }
+        }
+    } catch (error) {
+        console.error('Error calculating today\'s signatures:', error);
+        const todayCountElement = document.querySelector('.today-count');
+        if (showLoadingMessage) {
+            todayCountElement.textContent = 'Could not load today\'s signatures';
+        }
+    }
+}
+
+// Call this function when the page loads
+document.addEventListener('DOMContentLoaded', function() {
+    // Fetch today's signatures after a short delay to ensure other APIs load first
+    setTimeout(fetchTodaySignatures, 1000);
+});
+
+// Also update it periodically (every 5 minutes)
+setInterval(() => fetchTodaySignatures(false), 5 * 60 * 1000);
 
 // Fetch and display country data
 fetch('https://eci.ec.europa.eu/045/public/api/report/map')
