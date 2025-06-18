@@ -645,7 +645,7 @@ function displayCountriesWithMethods(countries) {
 
 // Function to sort countries and update the display
 function sortCountries(order = 'desc', sortBy = 'percentage') {
-    fetch('https://eci.ec.europa.eu/045/public/api/report/map')
+    fetch('https://stopkillinggamesdata.montoria.se/')
         .then(response => response.json())
         .then(data => {
             const sortedCountries = [...data.signatureCountryCount].sort((a, b) => {
@@ -716,7 +716,7 @@ document.getElementById('showSignatureByMethod').addEventListener('click', funct
         button.textContent = "Show signatures by method";
     }
 
-    fetch('https://eci.ec.europa.eu/045/public/api/report/map')
+    fetch('https://stopkillinggamesdata.montoria.se/')
         .then(response => response.json())
         .then(data => {
             const sortedCountries = data.signatureCountryCount.sort((a, b) => b.percentage - a.percentage);
@@ -952,7 +952,7 @@ document.addEventListener('DOMContentLoaded', function() {
 setInterval(() => fetchTodaySignatures(false), 5 * 60 * 1000);
 
 // Fetch and display country data
-fetch('https://eci.ec.europa.eu/045/public/api/report/map')
+fetch('https://stopkillinggamesdata.montoria.se/')
     .then(response => response.json())
     .then(data => {
         console.log(data); // Log the data to see what's being returned
