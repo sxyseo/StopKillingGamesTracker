@@ -773,7 +773,6 @@ function updateTotalProgress() {
 
             //Display confetti when a signature is added
             if (previousSignatureCount < signatureCount && previousSignatureCount !== 0) {
-                confetti();
                 // Also update today's count when new signatures come in, but don't show loading message
                 fetchTodaySignatures(false);
             }
