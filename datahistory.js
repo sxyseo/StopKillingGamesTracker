@@ -72,7 +72,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         data.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
 
         const countries = {};
+        const euTotals = [];
+        
         data.forEach(entry => {
+            let euTotalCount = 0;
+            let euTotalPercentage = 0;
+            
             entry.data.forEach(countryData => {
                 const { countryCode, totalCount, percentage } = countryData;
                 if (!countries[countryCode]) {
@@ -84,11 +89,21 @@ document.addEventListener('DOMContentLoaded', async () => {
                     totalCount,
                     percentage
                 });
+                
+                // Add to EU totals
+                euTotalCount += totalCount;
+                euTotalPercentage += percentage;
+            });
+            
+            euTotals.push({
+                timestamp: entry.timestamp,
+                totalCount: euTotalCount,
+                percentage: (euTotalCount / 1000000) * 100 // Calculate EU percentage out of 1 million
             });
         });
 
         const prepareDatasets = () => {
-            return Object.keys(countries).map(countryCode => {
+            const countryDatasets = Object.keys(countries).map(countryCode => {
                 const color = colors[countryCode];
                 return {
                     label: countryNames[countryCode] || countryCode,
@@ -98,9 +113,28 @@ document.addEventListener('DOMContentLoaded', async () => {
                     })),
                     fill: false,
                     borderColor: color,
-                    backgroundColor: color
+                    backgroundColor: color,
+                    borderWidth: 1
                 };
             });
+            
+            // Add EU total dataset
+            const euDataset = {
+                label: '🇪🇺 EU Total',
+                data: euTotals.map(entry => ({
+                    x: new Date(entry.timestamp),
+                    y: usePercentage ? entry.percentage : entry.totalCount
+                })),
+                fill: false,
+                borderColor: '#003399',
+                backgroundColor: '#003399',
+                borderWidth: 3,
+                pointRadius: 3,
+                pointHoverRadius: 5,
+                hidden: true // Hidden by default
+            };
+            
+            return [euDataset, ...countryDatasets];
         };
 
         const chart = new Chart(ctx, {
@@ -190,10 +224,29 @@ document.addEventListener('DOMContentLoaded', async () => {
             chart.update();
         });
 
+        let showingEUOnly = false;
+
         document.getElementById('deselectAll').addEventListener('click', () => {
             chart.data.datasets.forEach(dataset => {
                 dataset.hidden = true;
             });
+            chart.update();
+        });
+
+        document.getElementById('toggleEUOnly').addEventListener('click', () => {
+            if (showingEUOnly) {
+                // Currently showing EU only, switch to show all countries (hide EU)
+                chart.data.datasets.forEach((dataset, index) => {
+                    dataset.hidden = index === 0; // Hide EU (index 0), show all countries
+                });
+                showingEUOnly = false;
+            } else {
+                // Currently showing countries, switch to show EU only
+                chart.data.datasets.forEach((dataset, index) => {
+                    dataset.hidden = index !== 0; // Show only EU (index 0), hide all countries
+                });
+                showingEUOnly = true;
+            }
             chart.update();
         });
 
