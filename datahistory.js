@@ -62,6 +62,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     let usePercentage = false;
+    let showDailyChange = false;
     const colors = {};
 
     try {
@@ -102,12 +103,37 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         });
 
+        // Helper function to calculate daily changes
+        const calculateDailyChanges = (dataArray) => {
+            const changes = [];
+            for (let i = 1; i < dataArray.length; i++) {
+                const current = dataArray[i];
+                const previous = dataArray[i - 1];
+                changes.push({
+                    timestamp: current.timestamp,
+                    totalCount: current.totalCount - previous.totalCount,
+                    percentage: current.percentage - previous.percentage
+                });
+            }
+            return changes;
+        };
+
+        // Helper function to get y-axis title
+        const getYAxisTitle = () => {
+            if (showDailyChange) {
+                return usePercentage ? 'Daily Percentage Change' : 'Daily Signature Change';
+            } else {
+                return usePercentage ? 'Percentage' : 'Total Count';
+            }
+        };
+
         const prepareDatasets = () => {
             const countryDatasets = Object.keys(countries).map(countryCode => {
                 const color = colors[countryCode];
+                const dataToUse = showDailyChange ? calculateDailyChanges(countries[countryCode]) : countries[countryCode];
                 return {
                     label: countryNames[countryCode] || countryCode,
-                    data: countries[countryCode].map(entry => ({
+                    data: dataToUse.map(entry => ({
                         x: new Date(entry.timestamp),
                         y: usePercentage ? entry.percentage : entry.totalCount
                     })),
@@ -119,9 +145,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
             
             // Add EU total dataset
+            const euDataToUse = showDailyChange ? calculateDailyChanges(euTotals) : euTotals;
             const euDataset = {
-                label: '🇪🇺 EU Total',
-                data: euTotals.map(entry => ({
+                label: 'EU Total',
+                data: euDataToUse.map(entry => ({
                     x: new Date(entry.timestamp),
                     y: usePercentage ? entry.percentage : entry.totalCount
                 })),
@@ -159,7 +186,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     y: {
                         title: {
                             display: true,
-                            text: 'Total Count'
+                            text: getYAxisTitle()
                         }
                     }
                 },
@@ -253,7 +280,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('switchYAxis').addEventListener('click', () => {
             usePercentage = !usePercentage;
             chart.data.datasets = prepareDatasets();
-            chart.options.scales.y.title.text = usePercentage ? 'Percentage' : 'Total Count';
+            chart.options.scales.y.title.text = getYAxisTitle();
+            chart.update();
+        });
+
+        document.getElementById('toggleDailyChange').addEventListener('click', () => {
+            showDailyChange = !showDailyChange;
+            chart.data.datasets = prepareDatasets();
+            chart.options.scales.y.title.text = getYAxisTitle();
             chart.update();
         });
 
