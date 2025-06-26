@@ -140,7 +140,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                     fill: false,
                     borderColor: color,
                     backgroundColor: color,
-                    borderWidth: 1
+                    borderWidth: 1,
+                    tension: 0.4
                 };
             });
             
@@ -158,7 +159,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 borderWidth: 3,
                 pointRadius: 3,
                 pointHoverRadius: 5,
-                hidden: true // Hidden by default
+                hidden: true, // Hidden by default
+                tension: 0.4
             };
             
             return [euDataset, ...countryDatasets];
