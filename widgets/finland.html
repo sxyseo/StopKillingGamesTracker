@@ -35,7 +35,7 @@
     <script src="../nothingimportant.js"></script>
     <script>
         function updateData() {
-            fetch('https://eci.ec.europa.eu/045/public/api/report/map')
+            fetch('https://stopkillinggamesdata.montoria.se/')
                 .then(response => response.json())
                 .then(data => {
                     const filtered = data.signatureCountryCount.filter(country => country.countryCode === 'fi');
@@ -47,8 +47,8 @@
         // Initial load
         updateData();
 
-        // Update every 10 minutes (600000 milliseconds)
-        setInterval(updateData, 600000);
+        // Update every 5 minutes (300000 milliseconds)
+        setInterval(updateData, 300000);
     </script>
 </body>
 </html>
