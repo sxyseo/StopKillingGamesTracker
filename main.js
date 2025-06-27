@@ -382,11 +382,11 @@ function displayCountries(countries, showMethods = false, showUpdateMessage = fa
                 div.appendChild(disclaimerElement);
             }
 
-            // Only add "Data is updated every 10 minutes" if showUpdateMessage is true
+            // Only add "Data is updated every 5 minutes" if showUpdateMessage is true
             if (showUpdateMessage) {
                 const updateInfo = document.createElement('p');
                 updateInfo.className = 'update-info'; // give it a unique class
-                updateInfo.textContent = 'Data is updated every 10 minutes.';
+                updateInfo.textContent = 'Data is updated every 5 minutes.';
                 div.appendChild(updateInfo);
             }
 
