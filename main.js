@@ -99,7 +99,7 @@ function updateThresholdProgress(countries) {
     }
 }
 // Function to display countries
-function displayCountries(countries, showMethods = false, showUpdateMessage = false) {
+function displayCountries(countries, showUpdateMessage = false) {
     const parentDiv = document.getElementById('myDiv');
     parentDiv.innerHTML = ''; // Clear existing content
 
@@ -365,20 +365,8 @@ function displayCountries(countries, showMethods = false, showUpdateMessage = fa
             div.appendChild(totalCountElement);
             div.appendChild(tresholdElement);
             div.appendChild(signaturesPerCapitaElement);
-            if (showMethods) {
-                const formCountElement = document.createElement('p');
-                formCountElement.className = 'form-count';
-                formCountElement.textContent = `Form Count: ${item.formCount.toLocaleString()}`;
-
-                const eidCountElement = document.createElement('p');
-                eidCountElement.className = 'eid-count';
-                eidCountElement.textContent = `EID Count: ${item.eidCount.toLocaleString()}`;
-
-                div.appendChild(formCountElement);
-                div.appendChild(eidCountElement);
-            }
             div.appendChild(countryProgressBar);
-            if ((percentage >= 100) && !showMethods && !showUpdateMessage) {
+            if ((percentage >= 100) && !showUpdateMessage) {
                 div.appendChild(disclaimerElement);
             }
 
@@ -664,7 +652,7 @@ function sortCountries(order = 'desc', sortBy = 'percentage') {
                 }
             });
 
-            displayCountries(sortedCountries, showSignatureMethods);
+            displayCountries(sortedCountries);
         })
         .catch(error => console.error('Error:', error));
 }
@@ -702,63 +690,6 @@ document.getElementById('sortPerCapitaDesc').addEventListener('click', () => {
     sortCountries('desc', 'perCapita');
 });
 
-// Toggle state for showing/hiding signature methods
-let showSignatureMethods = false;
-
-// Add event listener for the "Show signature by method" button
-document.getElementById('showSignatureByMethod').addEventListener('click', function () {
-    const button = this;
-    showSignatureMethods = !showSignatureMethods;
-
-    if (showSignatureMethods) {
-        button.textContent = "Hide signatures by method";
-    } else {
-        button.textContent = "Show signatures by method";
-    }
-
-    fetch('https://stopkillinggamesdata.montoria.se/')
-        .then(response => response.json())
-        .then(data => {
-            const sortedCountries = data.signatureCountryCount.sort((a, b) => b.percentage - a.percentage);
-            displayCountries(sortedCountries, showSignatureMethods);
-
-            if (showSignatureMethods) {
-                // Calculate total EID count
-                const totalEidCount = sortedCountries.reduce((sum, country) => sum + country.eidCount, 0);
-
-                // Calculate total form signatures count
-                const totalFormSignaturesCount = sortedCountries.reduce((sum, country) => sum + country.formCount, 0);
-
-                // Display total EID count
-                const totalEidCountElement = document.createElement('p');
-                totalEidCountElement.className = 'total-eid-count';
-                totalEidCountElement.textContent = `Total EID Signatures: ${totalEidCount.toLocaleString()}`;
-
-                // Display total form signatures count
-                const totalFormSignaturesCountElement = document.createElement('p');
-                totalFormSignaturesCountElement.className = 'total-form-signatures-count';
-                totalFormSignaturesCountElement.textContent = `Total Form Signatures: ${totalFormSignaturesCount.toLocaleString()}`;
-
-                // Append the total EID count element to the "TotalEIDsignatures" div
-                const totalEidSignaturesDiv = document.getElementById('TotalEIDsignatures');
-                totalEidSignaturesDiv.innerHTML = ''; // Clear any existing content
-                totalEidSignaturesDiv.appendChild(totalEidCountElement);
-
-                // Append the total form signatures count element to the "TotalFormSignatures" div
-                const totalFormSignaturesDiv = document.getElementById('TotalFormSignatures');
-                totalFormSignaturesDiv.innerHTML = ''; // Clear any existing content
-                totalFormSignaturesDiv.appendChild(totalFormSignaturesCountElement);
-            } else {
-                // Clear the content of the "TotalEIDsignatures" and "TotalFormSignatures" divs
-                const totalEidSignaturesDiv = document.getElementById('TotalEIDsignatures');
-                totalEidSignaturesDiv.innerHTML = ''; // Clear any existing content
-
-                const totalFormSignaturesDiv = document.getElementById('TotalFormSignatures');
-                totalFormSignaturesDiv.innerHTML = ''; // Clear any existing content
-            }
-        })
-        .catch(error => console.error('Error:', error));
-});
 // Function to fetch and update total progress data
 function updateTotalProgress() {
     fetch('https://eci.ec.europa.eu/045/public/api/report/progression')
