@@ -310,6 +310,24 @@ body {
     align-items: center;
 }
 
+.threshold-cleared-message {
+    text-align: center;
+    color: white;
+    background-color: #26292F;
+    border: 2px solid #4caf50;
+    border-radius: 10px;
+    padding: 15px 20px;
+    margin: 20px auto;
+    max-width: 600px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.threshold-cleared-message p {
+    margin: 0;
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
 /* Country flag style */
 .country-flag {
     display: block;
