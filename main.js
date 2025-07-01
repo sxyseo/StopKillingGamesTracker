@@ -757,11 +757,16 @@ let totalSignaturesFromYesterday = { loading: false, error: null, data: null };
 
 // Fetch and cache historical data for total signatures from yesterday.
 async function fetchTotalSignaturesFromYesterday() {
+    console.log('Fetching historical data...');
     totalSignaturesFromYesterday = { loading: true, error: null, data: totalSignaturesFromYesterday.data };
 
     try {
         const response = await fetch('https://stopkillinggameshistoric-3a5f498bc1f0.herokuapp.com/historic-data');
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
         const historicData = await response.json();
+        console.log('Historical data received:', historicData.length, 'entries');
         historicData.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
         // Find most recent entry that's not from today
@@ -774,21 +779,27 @@ async function fetchTotalSignaturesFromYesterday() {
 
 
         if (mostRecentEntryNotFromToday === undefined) {
+            console.log('No previous entries found');
             totalSignaturesFromYesterday = { loading: false, error: new Error('No previous entries found to calculate today\'s signatures'), data: totalSignaturesFromYesterday.data };
+            updateTotalSignatures(/* showLoadingMessage: */ true);
             return;
         }
 
         const previousTotal = mostRecentEntryNotFromToday.data.reduce((acc, country) => acc + country.totalCount, 0);
+        console.log('Previous total signatures:', previousTotal);
         totalSignaturesFromYesterday = { loading: false, error: null, data: previousTotal };
 
         updateTotalSignatures(/* showLoadingMessage: */ true);
     } catch (e) {
+        console.error('Error fetching historical data:', e);
         totalSignaturesFromYesterday = { loading: false, error: e, data: totalSignaturesFromYesterday.data };
+        updateTotalSignatures(/* showLoadingMessage: */ true);
     }
 }
 
 // Function to fetch historical data and calculate today's signatures
 async function updateTotalSignatures(showLoadingMessage = true) {
+    console.log('updateTotalSignatures called, showLoadingMessage:', showLoadingMessage);
     const todayCountElement = document.querySelector('.today-count');
     
     // Only show loading message on initial load, not during updates
@@ -797,16 +808,19 @@ async function updateTotalSignatures(showLoadingMessage = true) {
     }
 
     if (totalSignaturesFromYesterday.loading) {
+        console.log('Historical data still loading, waiting...');
         // Historical data hasn't loaded yet, bail out.
         return;
     }
 
     if (totalSignaturesFromYesterday.error != null) {
+        console.log('Historical data error:', totalSignaturesFromYesterday.error);
         todayCountElement.textContent = 'Couldn\'t calculate today\'s signatures: ' + totalSignaturesFromYesterday.error.toString();
         return;
     }
 
     if (totalSignaturesFromYesterday.data === null) {
+        console.log('No historical data available yet');
         // It's possible that we haven't even requested to fetch the data, so don't update until that is the case.
         return;
     }
@@ -818,6 +832,9 @@ async function updateTotalSignatures(showLoadingMessage = true) {
 
         const currentTotal = currentData.signatureCount;
         const previousTotal = totalSignaturesFromYesterday.data;
+        const todaySignatures = Math.max(0, currentTotal - previousTotal);
+        
+        console.log('Current total:', currentTotal, 'Previous total:', previousTotal, 'Today\'s signatures:', todaySignatures);
 
         // Get previous value for animation
         const prevValue = parseInt(todayCountElement.dataset.value) || 0;
@@ -882,7 +899,7 @@ async function updateTotalSignatures(showLoadingMessage = true) {
             }
         }
     } catch (e) {
-        console.error('Error calculating today\'s signatures:', error);
+        console.error('Error calculating today\'s signatures:', e);
         const todayCountElement = document.querySelector('.today-count');
         if (showLoadingMessage) {
             todayCountElement.textContent = 'Could not load today\'s signatures';
