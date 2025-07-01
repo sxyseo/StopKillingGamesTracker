@@ -761,7 +761,7 @@ async function fetchTotalSignaturesFromYesterday() {
     totalSignaturesFromYesterday = { loading: true, error: null, data: totalSignaturesFromYesterday.data };
 
     try {
-        const response = await fetch('https://stopkillinggameshistoric-3a5f498bc1f0.herokuapp.com/historic-data');
+        const response = await fetch('https://stopkillinggameshistoricdata.montoria.se/historic-data');
         if (!response.ok) {
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
