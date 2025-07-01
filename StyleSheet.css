@@ -155,6 +155,27 @@ body {
     left: 0;
 }
 
+/* Progress bar fill for the fourth 100% */
+.progress-fourth {
+    height: 100%;
+    background-color: #00834c;
+    width: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+/* Progress bar fill for the fifth 100% */
+.progress-fifth {
+    height: 100%;
+    background-color: #239fa8;
+    ;
+    width: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
 .progress-divider {
     border-right: 1px solid #26292f;
 }
@@ -448,6 +469,11 @@ body {
     max-width: 500px;
     margin-top: 20px;
     border-radius: 10px;
+}
+
+.diamond-frame {
+    border: 0px solid #ccffff;
+    box-shadow: 0 0 10px #ccffff;
 }
 
 .gold-frame {
