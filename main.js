@@ -103,6 +103,10 @@ function displayCountries(countries, showUpdateMessage = false) {
     const parentDiv = document.getElementById('myDiv');
     parentDiv.innerHTML = ''; // Clear existing content
 
+    const progressClasses = [undefined, 'progress', 'progress-second', 'progress-third', 'progress-fourth', 'progress-fifth'];
+    const maxBarPercentage = progressClasses.length * 100; // largest percentage that can be properly represented by bars
+    const maxBarIndex = progressClasses.length - 1;
+    
     // Fetch all flag URLs
     const flagPromises = countries.map(item => {
         const countryName = countryNames[item.countryCode] || item.countryCode;
@@ -296,40 +300,33 @@ function displayCountries(countries, showUpdateMessage = false) {
             const countryProgressBar = document.createElement('div');
             countryProgressBar.className = 'progress-bar';
 
-            const progressBarFill = document.createElement('div');
-            progressBarFill.className = 'progress';
-            const progressBarSecondFill = document.createElement('div');
-            progressBarSecondFill.className = 'progress-second';
-            const progressBarThirdFill = document.createElement('div');
-            progressBarThirdFill.className = 'progress-third';
-
             // Calculate the width for each layer
             const percentage = item.percentage;
-            const firstLayerWidth = Math.min(percentage, 100);
-            const secondLayerWidth = Math.min(Math.max(percentage - 100, 0), 100);
-            const thirdLayerWidth = Math.min(Math.max(percentage - 200, 0), 100);
+            const isOverflow = percentage >= maxBarPercentage;
+            const backBarIndex = isOverflow ? maxBarIndex : Math.floor(percentage / 100);
+            const frontBarIndex = isOverflow ? maxBarIndex : backBarIndex + 1;
+            const frontBarWidth = isOverflow ? 0 : percentage % 100;
 
-            progressBarFill.style.width = `${firstLayerWidth}%`;
-            progressBarSecondFill.style.width = `${secondLayerWidth}%`;
-            progressBarThirdFill.style.width = `${thirdLayerWidth}%`;
+            const progressBarBack = document.createElement('div');
+            if (backBarIndex > 0) {
+                progressBarBack.className = progressClasses[backBarIndex];
+            }
+
+            const progressBarFront = document.createElement('div');
+            progressBarFront.className = progressClasses[frontBarIndex];
+            
+            progressBarBack.style.width = `100%`;
+            progressBarFront.style.width = `${frontBarWidth}%`;
 
             // Conditionally add the border class
-            if (firstLayerWidth > 1) {
-                progressBarFill.classList.add('progress-divider');
+            if (frontBarWidth > 1) {
+                progressBarFront.classList.add('progress-divider');
             }
-            if (secondLayerWidth > 1) {
-                progressBarSecondFill.classList.add('progress-divider');
-            }
-            if (thirdLayerWidth > 1) {
-                progressBarThirdFill.classList.add('progress-divider');
-            }
-
 
             // Create a span element for the percentage text
             const percentageText = document.createElement('span');
             percentageText.className = 'percentage-text';
             percentageText.textContent = `${percentage.toLocaleString()}%`;
-
 
 
             // Create a new p element for the disclaimer
@@ -339,18 +336,17 @@ function displayCountries(countries, showUpdateMessage = false) {
 
 
             // Append the filled progress bars to the progress bar container
-            countryProgressBar.appendChild(progressBarFill);
-            countryProgressBar.appendChild(progressBarSecondFill);
-            countryProgressBar.appendChild(progressBarThirdFill);
+            countryProgressBar.appendChild(progressBarBack);
+            countryProgressBar.appendChild(progressBarFront);
 
             // Append the percentage text to the progress bar container
             countryProgressBar.appendChild(percentageText);
 
-
-
-
             // Add the correct frame based on the progress
-            if (percentage >= 300) {
+            if (percentage >= 400) {
+                div.classList.add('diamond-frame');
+            }
+            else if (percentage >= 300) {
                 div.classList.add('gold-frame');
             }
             else if (percentage >= 200) {
