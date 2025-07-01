@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const colors = {};
 
     try {
-        const response = await fetch('https://stopkillinggameshistoric-3a5f498bc1f0.herokuapp.com/historic-data');
+        const response = await fetch('https://stopkillinggameshistoricdata.montoria.se/historic-data');
         let data = await response.json();
 
         // Sort data by timestamp
