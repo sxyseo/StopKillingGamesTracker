@@ -692,9 +692,23 @@ function updateTotalProgress() {
         .then(response => response.json())
         .then(data => {
             const { signatureCount, goal } = data;
-            if(signatureCount >= goal){
+            const goalReached = signatureCount >= goal;
+            
+            if(goalReached){
                 displayFireworks();
+                // Show encouragement message when goal is reached
+                const encouragementDiv = document.querySelector('.goal-reached-encouragement');
+                if (encouragementDiv) {
+                    encouragementDiv.style.display = 'block';
+                }
+            } else {
+                // Hide encouragement message if goal is not reached
+                const encouragementDiv = document.querySelector('.goal-reached-encouragement');
+                if (encouragementDiv) {
+                    encouragementDiv.style.display = 'none';
+                }
             }
+            
             // Calculate the percentage towards the goal
             const percentage = ((signatureCount / goal) * 100).toFixed(2);
 

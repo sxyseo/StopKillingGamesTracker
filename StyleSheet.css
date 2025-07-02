@@ -349,6 +349,47 @@ body {
     font-weight: bold;
 }
 
+/* Goal reached encouragement message */
+.goal-reached-encouragement {
+    text-align: center;
+    color: white;
+    background: linear-gradient(135deg, #4caf50, #8bc34a);
+    border: 2px solid #388E3C;
+    border-radius: 15px;
+    padding: 20px 25px;
+    margin: 20px auto;
+    max-width: 600px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    animation: goalPulse 3s ease-in-out infinite;
+}
+
+.goal-reached-encouragement p {
+    margin: 8px 0;
+    font-size: 1.1em;
+    line-height: 1.4;
+}
+
+.goal-reached-encouragement p:first-child {
+    font-size: 1.3em;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+@keyframes goalPulse {
+    0%, 100% {
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    }
+    50% {
+        box-shadow: 0 8px 20px rgba(76, 175, 80, 0.4);
+    }
+}
+
+@media (prefers-reduced-motion) {
+    .goal-reached-encouragement {
+        animation: none;
+    }
+}
+
 /* Country flag style */
 .country-flag {
     display: block;
