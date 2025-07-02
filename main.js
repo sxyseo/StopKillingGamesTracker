@@ -639,8 +639,15 @@ function updateTimeLeft(startTime, endTime) {
 
     document.querySelector('.schedule-status').innerText = globalScheduleStatus;
 
-    if(document.querySelector('.daily-signatures-needed').innerText = `We need at least ${Math.ceil((1000000-previousSignatureCount)/daysLeft)} signatures per day on average!`){
-        document.querySelector('.daily-signatures-needed').innerText = `We need at least ${Math.ceil((1000000-previousSignatureCount)/daysLeft)} signatures per day on average!`;
+    // Only show daily signatures needed if goal hasn't been reached
+    const dailySignaturesElement = document.querySelector('.daily-signatures-needed');
+    if (previousSignatureCount >= 1000000) {
+        dailySignaturesElement.style.display = 'none';
+    } else {
+        dailySignaturesElement.style.display = 'block';
+        if(dailySignaturesElement.innerText = `We need at least ${Math.ceil((1000000-previousSignatureCount)/daysLeft)} signatures per day on average!`){
+            dailySignaturesElement.innerText = `We need at least ${Math.ceil((1000000-previousSignatureCount)/daysLeft)} signatures per day on average!`;
+        }
     }
 
     animIndex++;
