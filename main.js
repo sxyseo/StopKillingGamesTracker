@@ -12,7 +12,7 @@ const countryNames = {
     "ee": "Estonia",
     "pt": "Portugal",
     "ro": "Romania",
-    "cz": "Czech Republic",
+    "cz": "Czechia",
     "at": "Austria",
     "hr": "Croatia",
     "fr": "France",
@@ -59,27 +59,18 @@ const countryPopulations = {
     "cy": 888005
 };
 
-// Function to fetch the flag URL from Wikipedia
+// Function to get the flag URL from local flags folder
 function fetchFlagUrl(countryName) {
     const specialCases = {
         "Netherlands": "Flag_of_the_Netherlands",
-        "Czech Republic": "Flag_of_the_Czech_Republic"
+        "Czechia": "Flag_of_the_Czech_Republic"
     };
 
-    const title = specialCases[countryName] || `Flag_of_${countryName.replace(/ /g, '_')}`;
-    const url = `https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&prop=pageimages&piprop=thumbnail&pithumbsize=500&titles=${title}`;
-
-    return fetch(url)
-        .then(response => response.json())
-        .then(data => {
-            const pages = data.query.pages;
-            const page = Object.values(pages)[0];
-            return page.thumbnail ? page.thumbnail.source : null;
-        })
-        .catch(error => {
-            console.error('Error fetching flag:', error);
-            return null;
-        });
+    const fileName = specialCases[countryName] || `Flag_of_${countryName.replace(/ /g, '_')}`;
+    const flagPath = `flags/${fileName}.svg.png`;
+    
+    // Return a resolved promise with the local flag path
+    return Promise.resolve(flagPath);
 }
 
 function updateThresholdProgress(countries) {
