@@ -444,7 +444,7 @@ document.getElementById('sortPerCapitaDesc').addEventListener('click', () => {
 
 // Function to fetch and update total progress data
 function updateTotalProgress() {
-    fetch('http://localhost:13371/api/historic-data')
+    fetch('https://eci.ec.europa.eu/045/public/api/report/progression')
         .then(response => response.json())
         .then(data => {
             const { signatureCount, goal } = data;
@@ -456,20 +456,6 @@ function updateTotalProgress() {
                 const encouragementDiv = document.querySelector('.goal-reached-encouragement');
                 if (encouragementDiv) {
                     encouragementDiv.style.display = 'block';
-                    
-                    // Add milestone markers to the progress bar if not already added
-                    const progressBar = document.querySelector('.total-progress .progress-bar');
-                    if (progressBar && !progressBar.querySelector('.milestone-marker')) {
-                        const milestones = [100000, 200000, 300000, 400000, 500000];
-                        milestones.forEach((milestone, index) => {
-                            const marker = document.createElement('div');
-                            marker.className = 'milestone-marker';
-                            marker.style.left = `${(milestone / 1000000) * 100}%`;
-                            marker.title = `${milestone.toLocaleString()} signatures`;
-                            marker.innerHTML = `<span class="milestone-label">${milestone / 1000}k</span>`;
-                            progressBar.appendChild(marker);
-                        });
-                    }
                     
                     // Update buffer progress overlays for extra signatures (100k increments)
                     const extraSignatures = Math.max(0, signatureCount - goal);
@@ -531,10 +517,6 @@ function updateTotalProgress() {
                     encouragementDiv.style.display = 'none';
                 }
                 
-                // Remove milestone markers when goal is not reached
-                const milestoneMarkers = document.querySelectorAll('.milestone-marker');
-                milestoneMarkers.forEach(marker => marker.remove());
-                
                 // Reset all buffer overlays
                 const bufferOverlays = document.querySelectorAll('.buffer-progress-overlay');
                 bufferOverlays.forEach(overlay => {
@@ -574,7 +556,7 @@ function updateTotalProgress() {
 async function fetchYesterdaySignatures() {
     try {
         // Get current total from main API
-        const currentResponse = await fetch('http://localhost:13371/api/historic-data');
+        const currentResponse = await fetch('https://eci.ec.europa.eu/045/public/api/report/progression');
         const currentData = await currentResponse.json();
         const currentTotal = currentData.signatureCount;
 
@@ -808,7 +790,7 @@ async function updateTotalSignatures(showLoadingMessage = true) {
 
     try {
         // Get current total from main API first
-        const currentResponse = await fetch('http://localhost:13371/api/historic-data');
+        const currentResponse = await fetch('https://eci.ec.europa.eu/045/public/api/report/progression');
         const currentData = await currentResponse.json();
 
         const currentTotal = currentData.signatureCount;
