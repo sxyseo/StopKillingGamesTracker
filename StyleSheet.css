@@ -353,26 +353,106 @@ body {
 .goal-reached-encouragement {
     text-align: center;
     color: white;
-    background: linear-gradient(135deg, #4caf50, #8bc34a);
-    border: 2px solid #388E3C;
-    border-radius: 15px;
-    padding: 20px 25px;
+    background-color: #26292F;
+    border: 2px solid #4caf50;
+    border-radius: 10px;
+    padding: 15px 20px;
     margin: 20px auto;
     max-width: 600px;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
-    animation: goalPulse 3s ease-in-out infinite;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .goal-reached-encouragement p {
-    margin: 8px 0;
+    margin: 0;
     font-size: 1.1em;
-    line-height: 1.4;
+    font-weight: bold;
 }
 
-.goal-reached-encouragement p:first-child {
-    font-size: 1.3em;
+.goal-reached-encouragement p:first-of-type {
+    font-size: 1.1em;
     font-weight: bold;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
+}
+
+/* Secondary progress bar for extra signatures - now uses overlays */
+.buffer-progress-overlay {
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    transition: width 0.8s ease-in-out, opacity 0.3s ease-in-out;
+    border-radius: 5px;
+}
+
+/* Different colors for each 100k increment */
+.buffer-100k {
+    background: linear-gradient(90deg, #FFD700, #FFA500, #FFD700);
+    background-size: 200% 100%;
+    animation: bufferProgress 3s linear infinite;
+}
+
+.buffer-200k {
+    background: linear-gradient(90deg, #FF8C00, #FF6347, #FF8C00);
+    background-size: 200% 100%;
+    animation: bufferProgress 3s linear infinite;
+}
+
+.buffer-300k {
+    background: linear-gradient(90deg, #FF4500, #DC143C, #FF4500);
+    background-size: 200% 100%;
+    animation: bufferProgress 3s linear infinite;
+}
+
+.buffer-400k {
+    background: linear-gradient(90deg, #8A2BE2, #9400D3, #8A2BE2);
+    background-size: 200% 100%;
+    animation: bufferProgress 3s linear infinite;
+}
+
+.buffer-500k {
+    background: linear-gradient(90deg, #4B0082, #663399, #4B0082);
+    background-size: 200% 100%;
+    animation: bufferProgress 3s linear infinite;
+}
+
+/* Buffer info display */
+.buffer-info {
+    margin-top: 15px;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.buffer-text {
+    font-size: 1.1em;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.buffer-milestone {
+    font-size: 1em;
+    color: #FFD700;
+    font-weight: bold;
+}
+
+.buffer-count, .next-milestone {
+    color: #FFD700;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Explanation text for buffer progress increments */
+.buffer-explanation {
+    font-size: 0.9em;
+    color: #E0E0E0;
+    margin-top: 10px;
+    font-style: italic;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 @keyframes goalPulse {
@@ -384,9 +464,21 @@ body {
     }
 }
 
+@keyframes bufferProgress {
+    0% {
+        background-position: 0% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
 @media (prefers-reduced-motion) {
-    .goal-reached-encouragement {
+    .buffer-progress-overlay {
         animation: none;
+    }
+    .buffer-100k, .buffer-200k, .buffer-300k, .buffer-400k, .buffer-500k {
+        background: #FFD700;
     }
 }
 
@@ -543,6 +635,7 @@ footer {
     left: 0;
     border-top: 1px solid #3a2f4d;
     box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
 }
 
 a {

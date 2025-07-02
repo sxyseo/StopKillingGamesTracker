@@ -42,10 +42,22 @@
             <p class="percentage-to-goal"></p>
             <div class="progress-bar">
                 <div class="progress" style="width: 0%"></div>
+                <!-- Buffer progress overlays (hidden by default, shown when goal is reached) -->
+                <div class="buffer-progress-overlay buffer-100k" style="width: 0%"></div>
+                <div class="buffer-progress-overlay buffer-200k" style="width: 0%"></div>
+                <div class="buffer-progress-overlay buffer-300k" style="width: 0%"></div>
+                <div class="buffer-progress-overlay buffer-400k" style="width: 0%"></div>
+                <div class="buffer-progress-overlay buffer-500k" style="width: 0%"></div>
             </div>
             <div class="goal-reached-encouragement" style="display: none;">
-                <p>🎉 <strong>Goal Reached!</strong> 🎉</p>
+                <p>🎉 <strong>Milestone reached!</strong> 🎉</p>
                 <p>But don't stop now! Some signatures may be invalidated due to errors in filling out forms. <strong>Keep signing to ensure we have a safety buffer!</strong> Every additional signature helps secure our victory.</p>
+                
+                <div class="buffer-info">
+                    <div class="buffer-text">Buffer Progress: <span class="buffer-count">0</span> signatures</div>
+                    <div class="buffer-milestone">Next milestone: <span class="next-milestone">100,000</span> signatures</div>
+                    <div class="buffer-explanation">📊 Each colored layer above represents 100,000 additional signatures!</div>
+                </div>
             </div>
         </div>
     </div>

@@ -444,7 +444,7 @@ document.getElementById('sortPerCapitaDesc').addEventListener('click', () => {
 
 // Function to fetch and update total progress data
 function updateTotalProgress() {
-    fetch('https://eci.ec.europa.eu/045/public/api/report/progression')
+    fetch('http://localhost:13371/api/historic-data')
         .then(response => response.json())
         .then(data => {
             const { signatureCount, goal } = data;
@@ -456,13 +456,91 @@ function updateTotalProgress() {
                 const encouragementDiv = document.querySelector('.goal-reached-encouragement');
                 if (encouragementDiv) {
                     encouragementDiv.style.display = 'block';
+                    
+                    // Add milestone markers to the progress bar if not already added
+                    const progressBar = document.querySelector('.total-progress .progress-bar');
+                    if (progressBar && !progressBar.querySelector('.milestone-marker')) {
+                        const milestones = [100000, 200000, 300000, 400000, 500000];
+                        milestones.forEach((milestone, index) => {
+                            const marker = document.createElement('div');
+                            marker.className = 'milestone-marker';
+                            marker.style.left = `${(milestone / 1000000) * 100}%`;
+                            marker.title = `${milestone.toLocaleString()} signatures`;
+                            marker.innerHTML = `<span class="milestone-label">${milestone / 1000}k</span>`;
+                            progressBar.appendChild(marker);
+                        });
+                    }
+                    
+                    // Update buffer progress overlays for extra signatures (100k increments)
+                    const extraSignatures = Math.max(0, signatureCount - goal);
+                    
+                    // Update buffer text information
+                    const bufferCountElement = document.querySelector('.buffer-count');
+                    const nextMilestoneElement = document.querySelector('.next-milestone');
+                    
+                    if (bufferCountElement) {
+                        bufferCountElement.textContent = extraSignatures.toLocaleString();
+                    }
+                    
+                    // Calculate next milestone
+                    const currentMilestone = Math.floor(extraSignatures / 100000) + 1;
+                    const nextMilestone = currentMilestone * 100000;
+                    if (nextMilestoneElement) {
+                        if (extraSignatures >= 500000) {
+                            nextMilestoneElement.textContent = "Incredible! You've exceeded all expectations!";
+                        } else {
+                            nextMilestoneElement.textContent = nextMilestone.toLocaleString();
+                        }
+                    }
+                    
+                    // Update buffer overlays (each represents 100k signatures)
+                    const bufferOverlays = [
+                        document.querySelector('.buffer-100k'),
+                        document.querySelector('.buffer-200k'),
+                        document.querySelector('.buffer-300k'),
+                        document.querySelector('.buffer-400k'),
+                        document.querySelector('.buffer-500k')
+                    ];
+                    
+                    bufferOverlays.forEach((overlay, index) => {
+                        if (overlay) {
+                            const milestoneValue = (index + 1) * 100000; // 100k, 200k, 300k, etc.
+                            
+                            if (extraSignatures >= milestoneValue) {
+                                // This milestone is completely filled
+                                overlay.style.width = '100%';
+                                overlay.style.opacity = '1';
+                            } else if (extraSignatures > index * 100000) {
+                                // This milestone is partially filled
+                                const progressInThisMilestone = extraSignatures - (index * 100000);
+                                const percentageOfMilestone = (progressInThisMilestone / 100000) * 100;
+                                overlay.style.width = `${percentageOfMilestone}%`;
+                                overlay.style.opacity = '1';
+                            } else {
+                                // This milestone hasn't been reached yet
+                                overlay.style.width = '0%';
+                                overlay.style.opacity = '0';
+                            }
+                        }
+                    });
                 }
             } else {
-                // Hide encouragement message if goal is not reached
+                // Hide encouragement message and reset buffer overlays if goal is not reached
                 const encouragementDiv = document.querySelector('.goal-reached-encouragement');
                 if (encouragementDiv) {
                     encouragementDiv.style.display = 'none';
                 }
+                
+                // Remove milestone markers when goal is not reached
+                const milestoneMarkers = document.querySelectorAll('.milestone-marker');
+                milestoneMarkers.forEach(marker => marker.remove());
+                
+                // Reset all buffer overlays
+                const bufferOverlays = document.querySelectorAll('.buffer-progress-overlay');
+                bufferOverlays.forEach(overlay => {
+                    overlay.style.width = '0%';
+                    overlay.style.opacity = '0';
+                });
             }
             
             // Calculate the percentage towards the goal
@@ -496,7 +574,7 @@ function updateTotalProgress() {
 async function fetchYesterdaySignatures() {
     try {
         // Get current total from main API
-        const currentResponse = await fetch('https://eci.ec.europa.eu/045/public/api/report/progression');
+        const currentResponse = await fetch('http://localhost:13371/api/historic-data');
         const currentData = await currentResponse.json();
         const currentTotal = currentData.signatureCount;
 
@@ -730,7 +808,7 @@ async function updateTotalSignatures(showLoadingMessage = true) {
 
     try {
         // Get current total from main API first
-        const currentResponse = await fetch('https://eci.ec.europa.eu/045/public/api/report/progression');
+        const currentResponse = await fetch('http://localhost:13371/api/historic-data');
         const currentData = await currentResponse.json();
 
         const currentTotal = currentData.signatureCount;
