@@ -85,7 +85,7 @@ async function fetchEuApiData() {
     isUpdatingProgress = true;
     
     try {
-        const response = await fetch('https://eci.ec.europa.eu/045/public/api/report/progression');
+        const response = await fetch('https://stopkillinggamesdata.montoria.se/realtime');
         const data = await response.json();
         
         // Cache the fresh data
