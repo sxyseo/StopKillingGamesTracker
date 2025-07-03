@@ -136,7 +136,7 @@ function displayCountries(countries, showUpdateMessage = false) {
     const parentDiv = document.getElementById('myDiv');
     parentDiv.innerHTML = ''; // Clear existing content
 
-    const progressClasses = [undefined, 'progress', 'progress-second', 'progress-third', 'progress-fourth', 'progress-fifth'];
+    const progressClasses = [undefined, 'progress', 'progress-second', 'progress-third', 'progress-fourth', 'progress-fifth', 'progress-sixth', 'progress-seventh'];
     const maxBarPercentage = progressClasses.length * 100; // largest percentage that can be properly represented by bars
     const maxBarIndex = progressClasses.length - 1;
     
@@ -376,7 +376,14 @@ function displayCountries(countries, showUpdateMessage = false) {
             countryProgressBar.appendChild(percentageText);
 
             // Add the correct frame based on the progress
-            if (percentage >= 400) {
+
+            if (percentage >= 600) {
+                div.classList.add('ruby-frame');
+            }
+            else if (percentage >= 500) {
+                div.classList.add('saphire-frame');
+            }
+            else if (percentage >= 400) {
                 div.classList.add('diamond-frame');
             }
             else if (percentage >= 300) {

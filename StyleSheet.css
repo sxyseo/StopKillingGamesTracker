@@ -176,6 +176,26 @@ body {
     left: 0;
 }
 
+.progress-sixth {
+    height: 100%;
+    background-color: #00695c;
+    ;
+    width: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.progress-seventh {
+    height: 100%;
+    background-color: #004D40;
+    ;
+    width: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
 .progress-divider {
     border-right: 1px solid #26292f;
 }
@@ -599,6 +619,16 @@ body {
     max-width: 500px;
     margin-top: 20px;
     border-radius: 10px;
+}
+
+.ruby-frame {
+    border: 0px solid #E0115F;
+    box-shadow: 0 0 10px #E0115F;
+}
+
+.saphire-frame {
+    border: 0px solid #a54cff;
+    box-shadow: 0 0 10px #a54cff;
 }
 
 .diamond-frame {
