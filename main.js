@@ -59,6 +59,48 @@ const countryPopulations = {
     "cy": 888005
 };
 
+// Global variables for progress tracking and API management
+let fireworksDisplayed = false;
+let previousSignatureCount = 0;
+let isUpdatingProgress = false; // Flag to prevent overlapping API requests
+let cachedEuApiData = null; // Cache for EU API data
+let lastEuApiFetch = 0; // Timestamp of last EU API fetch
+const EU_API_CACHE_DURATION = 3000; // Cache duration in milliseconds (3 seconds)
+
+// Centralized function to fetch EU API data with caching
+async function fetchEuApiData() {
+    const now = Date.now();
+    
+    // Return cached data if it's still fresh
+    if (cachedEuApiData && (now - lastEuApiFetch) < EU_API_CACHE_DURATION) {
+        return cachedEuApiData;
+    }
+    
+    // Prevent overlapping requests
+    if (isUpdatingProgress) {
+        console.log('EU API request already in progress, using cached data or waiting...');
+        return cachedEuApiData;
+    }
+    
+    isUpdatingProgress = true;
+    
+    try {
+        const response = await fetch('https://eci.ec.europa.eu/045/public/api/report/progression');
+        const data = await response.json();
+        
+        // Cache the fresh data
+        cachedEuApiData = data;
+        lastEuApiFetch = now;
+        
+        return data;
+    } catch (error) {
+        console.error('Error fetching EU API data:', error);
+        throw error;
+    } finally {
+        isUpdatingProgress = false;
+    }
+}
+
 // Function to get the flag URL from local flags folder
 function fetchFlagUrl(countryName) {
     const specialCases = {
@@ -434,11 +476,12 @@ document.getElementById('sortPerCapitaDesc').addEventListener('click', () => {
 });
 
 // Function to fetch and update total progress data
-function updateTotalProgress() {
-    fetch('https://eci.ec.europa.eu/045/public/api/report/progression')
-        .then(response => response.json())
-        .then(data => {
-            const { signatureCount, goal } = data;
+async function updateTotalProgress() {
+    try {
+        const data = await fetchEuApiData();
+        if (!data) return; // No data available
+        
+        const { signatureCount, goal } = data;
             const goalReached = signatureCount >= goal;
             
             if(goalReached){
@@ -539,16 +582,19 @@ function updateTotalProgress() {
             if(document.querySelector('.total-progress').querySelector('.progress').style.width != `${percentage}%`){
                 document.querySelector('.total-progress').querySelector('.progress').style.width = `${percentage}%`;
             }
-        })
-        .catch(error => console.error('Error:', error));
+    } catch (error) {
+        console.error('Error:', error);
+    }
 }
 
 // Function to fetch and calculate yesterday's signatures
 async function fetchYesterdaySignatures() {
     try {
-        // Get current total from main API
-        const currentResponse = await fetch('https://eci.ec.europa.eu/045/public/api/report/progression');
-        const currentData = await currentResponse.json();
+        // Get current total from centralized EU API fetch
+        const currentData = await fetchEuApiData();
+        if (!currentData) {
+            throw new Error('No data available from EU API');
+        }
         const currentTotal = currentData.signatureCount;
 
         // Get historical data
@@ -754,6 +800,7 @@ async function fetchTotalSignaturesFromYesterday() {
 // Function to fetch historical data and calculate today's signatures
 async function updateTotalSignatures(showLoadingMessage = true) {
     console.log('updateTotalSignatures called, showLoadingMessage:', showLoadingMessage);
+    
     const todayCountElement = document.querySelector('.today-count');
     
     // Only show loading message on initial load, not during updates
@@ -780,9 +827,11 @@ async function updateTotalSignatures(showLoadingMessage = true) {
     }
 
     try {
-        // Get current total from main API first
-        const currentResponse = await fetch('https://eci.ec.europa.eu/045/public/api/report/progression');
-        const currentData = await currentResponse.json();
+        // Get current total from centralized EU API fetch
+        const currentData = await fetchEuApiData();
+        if (!currentData) {
+            throw new Error('No data available from EU API');
+        }
 
         const currentTotal = currentData.signatureCount;
         const previousTotal = totalSignaturesFromYesterday.data;
@@ -856,7 +905,7 @@ async function updateTotalSignatures(showLoadingMessage = true) {
         console.error('Error calculating today\'s signatures:', e);
         const todayCountElement = document.querySelector('.today-count');
         if (showLoadingMessage) {
-            todayCountElement.textContent = 'Could not load today\'s signatures';
+            todayCountElement.textContent = 'Loading today\'s signatures...';
         }
     }
 }
@@ -964,13 +1013,14 @@ function getProjectedFinalDate(startDate, currentSignatures, targetGoal, dailyVe
     return projectedDate;
 }
 
-let fireworksDisplayed = false;
-let previousSignatureCount = 0;
 // Initial fetch and update of total progress data
 updateTotalProgress();
 
 // Set interval to update total progress data every 3 seconds
-setInterval(()=> updateTotalProgress(), 3000);
+setInterval(async () => {
+    await updateTotalProgress();
+    updateTotalSignatures(false);
+}, 3000);
 
 //Update time left every second
 const startTime = new Date('31 jul 2024 GMT+0200');
