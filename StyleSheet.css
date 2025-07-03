@@ -592,7 +592,7 @@ body {
     }
 }
 
-.image img {
+.image img {    
     display: block;
     margin: 0 auto;
     width: 50vw;
@@ -602,8 +602,8 @@ body {
 }
 
 .diamond-frame {
-    border: 0px solid #ccffff;
-    box-shadow: 0 0 10px #ccffff;
+    border: 0px solid #00ffff;
+    box-shadow: 0 0 10px #00ffff;
 }
 
 .gold-frame {
