@@ -681,6 +681,17 @@ async function initializeScheduleStatus() {
     try {
         const yesterdayTotal = totalSignaturesFromYesterday.data;
         if (yesterdayTotal && typeof yesterdayTotal === 'number') {
+            // Get current data to determine the next milestone
+            const currentData = await fetchEuApiData();
+            if (!currentData) {
+                globalScheduleStatus = 'Unable to fetch current data for milestone calculation.';
+                return;
+            }
+            
+            const currentSignatures = currentData.signatureCount;
+            // Calculate next milestone (next 100k increment above current signatures)
+            const nextMilestone = Math.ceil(currentSignatures / 100000) * 100000;
+            
             const response = await fetch('https://stopkillinggameshistoricdata.montoria.se/historic-data');
             const historicData = await response.json();
             historicData.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
@@ -703,14 +714,24 @@ async function initializeScheduleStatus() {
                 if (yesterdaySignatures > 0) {
                     globalProjectedDate = getProjectedFinalDate(
                         new Date(),
-                        yesterdayTotal,
-                        1000000,
+                        currentSignatures,
+                        nextMilestone,
                         yesterdaySignatures
                     );
                     if (globalProjectedDate) {
                         const now = new Date();
-                        const daysToGoal = Math.ceil((globalProjectedDate - now) / (1000 * 60 * 60 * 24));
-                        globalScheduleStatus = `At yesterday's rate, the goal will be reached in ${daysToGoal} days (by ${globalProjectedDate.toLocaleDateString()})`;
+                        const timeToGoal = globalProjectedDate - now;
+                        const daysToGoal = Math.floor(timeToGoal / (1000 * 60 * 60 * 24));
+                        const hoursToGoal = Math.floor((timeToGoal % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                        
+                        let timeString;
+                        if (daysToGoal > 0) {
+                            timeString = `${daysToGoal} days, ${hoursToGoal} hours`;
+                        } else {
+                            timeString = `${hoursToGoal} hours`;
+                        }
+                        
+                        globalScheduleStatus = `At yesterday's rate, the next milestone (${nextMilestone.toLocaleString()}) will be reached in ${timeString} (by ${globalProjectedDate.toLocaleDateString()} ${globalProjectedDate.toLocaleTimeString()})`;
                     } else {
                         globalScheduleStatus = 'Could not calculate projected final date.';
                     }
@@ -743,14 +764,17 @@ function updateTimeLeft(startTime, endTime) {
 
     document.querySelector('.schedule-status').innerText = globalScheduleStatus;
 
-    // Only show daily signatures needed if goal hasn't been reached
+    // Calculate next milestone for daily signatures needed
+    const nextMilestone = Math.ceil(previousSignatureCount / 100000) * 100000;
+    
+    // Only show daily signatures needed if current milestone hasn't been reached
     const dailySignaturesElement = document.querySelector('.daily-signatures-needed');
-    if (previousSignatureCount >= 1000000) {
+    if (previousSignatureCount >= nextMilestone) {
         dailySignaturesElement.style.display = 'none';
     } else {
         dailySignaturesElement.style.display = 'block';
-        if(dailySignaturesElement.innerText = `We need at least ${Math.ceil((1000000-previousSignatureCount)/daysLeft)} signatures per day on average!`){
-            dailySignaturesElement.innerText = `We need at least ${Math.ceil((1000000-previousSignatureCount)/daysLeft)} signatures per day on average!`;
+        if(dailySignaturesElement.innerText = `We need at least ${Math.ceil((nextMilestone-previousSignatureCount)/daysLeft)} signatures per day on average to reach ${nextMilestone.toLocaleString()}!`){
+            dailySignaturesElement.innerText = `We need at least ${Math.ceil((nextMilestone-previousSignatureCount)/daysLeft)} signatures per day on average to reach ${nextMilestone.toLocaleString()}!`;
         }
     }
 
@@ -1007,15 +1031,14 @@ function getProjectedFinalDate(startDate, currentSignatures, targetGoal, dailyVe
     // 1. Calculate signatures remaining
     const signaturesRemaining = targetGoal - currentSignatures;
 
-    // 2. Calculate the number of days needed (round up to ensure goal is met)
-    const daysNeeded = Math.ceil(signaturesRemaining / dailyVelocity);
+    // 2. Calculate the number of hours needed
+    const hoursNeeded = (signaturesRemaining / dailyVelocity) * 24;
 
     // 3. Create a new Date object from the start date to avoid modifying the original
     const projectedDate = new Date(startDate);
 
-    // 4. Add the calculated days to the new date object
-    // setDate() handles month and year rollovers automatically
-    projectedDate.setDate(projectedDate.getDate() + daysNeeded);
+    // 4. Add the calculated hours to the new date object
+    projectedDate.setTime(projectedDate.getTime() + (hoursNeeded * 60 * 60 * 1000));
 
     return projectedDate;
 }
