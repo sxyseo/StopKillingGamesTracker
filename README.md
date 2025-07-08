@@ -1,3 +1,3 @@
-[Source code for https://stopkillinggamestracker.pages.dev/](https://www.stopkillinggames.cc/)
+[stop killing games web site](https://www.stopkillinggames.cc/)
 
 StopKillingGamesTracker
