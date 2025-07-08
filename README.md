@@ -1,5 +1,3 @@
-Source code for https://stopkillinggamestracker.pages.dev/
+[Source code for https://stopkillinggamestracker.pages.dev/](https://www.stopkillinggames.cc/)
 
-
-If you want to use any of the API:s I've created for this tracker in your own projects, please contact me on Discord before doing so. `@alex1337f`
- Thank you!
+StopKillingGamesTracker
